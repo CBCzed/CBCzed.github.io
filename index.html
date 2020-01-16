@@ -1,93 +1,290 @@
 <!DOCTYPE html>
-<html>
+<html lang="zh-CN">
 <head>
-  <meta charset="utf-8">
-  
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
 
-  
-  <title>Zed</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    hostname: new URL('http://yoursite.com').hostname,
+    root: '/',
+    scheme: 'Gemini',
+    version: '7.7.0',
+    exturl: false,
+    sidebar: {"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},
+    copycode: {"enable":false,"show_result":false,"style":null},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":false},
+    bookmark: {"enable":false,"color":"#222","save":"auto"},
+    fancybox: false,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    comments: {"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},
+    algolia: {
+      appID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: '',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}
+  };
+</script>
+
   <meta property="og:type" content="website">
 <meta property="og:title" content="Zed">
 <meta property="og:url" content="http://yoursite.com/index.html">
 <meta property="og:site_name" content="Zed">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:author" content="zed">
+<meta property="article:tag" content="JavaScript">
 <meta property="article:tag" content="博客">
 <meta name="twitter:card" content="summary">
-  
-    <link rel="alternate" href="/atom.xml" title="Zed" type="application/atom+xml">
-  
-  
-    <link rel="icon" href="/favicon.png">
-  
-  
-    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
-  
-  
-<link rel="stylesheet" href="/css/style.css">
 
-<meta name="generator" content="Hexo 4.2.0"></head>
+<link rel="canonical" href="http://yoursite.com/">
 
-<body>
-  <div id="container">
-    <div id="wrap">
-      <header id="header">
-  <div id="banner"></div>
-  <div id="header-outer" class="outer">
-    <div id="header-title" class="inner">
-      <h1 id="logo-wrap">
-        <a href="/" id="logo">Zed</a>
-      </h1>
-      
-    </div>
-    <div id="header-inner" class="inner">
-      <nav id="main-nav">
-        <a id="main-nav-toggle" class="nav-icon"></a>
-        
-          <a class="main-nav-link" href="/">Home</a>
-        
-          <a class="main-nav-link" href="/archives">Archives</a>
-        
-      </nav>
-      <nav id="sub-nav">
-        
-          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
-        
-        <a id="nav-search-btn" class="nav-icon" title="搜索"></a>
-      </nav>
-      <div id="search-form-wrap">
-        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
-      </div>
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: true,
+    isPost: false
+  };
+</script>
+
+  <title>Zed</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Zed</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
     </div>
   </div>
-</header>
-      <div class="outer">
-        <section id="main">
-  
-    <article id="post-JavaScript数据类型详解" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2019/06/30/JavaScript%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B%E8%AF%A6%E8%A7%A3/" class="article-date">
-  <time datetime="2019-06-30T07:54:28.000Z" itemprop="datePublished">2019-06-30</time>
-</a>
-    
+
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
   </div>
-  <div class="article-inner">
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
+
+  </li>
+  </ul>
+
+</nav>
+</div>
+    </header>
+
     
-    
-      <header class="article-header">
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
         
   
-    <h1 itemprop="name">
-      <a class="article-title" href="/2019/06/30/JavaScript%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B%E8%AF%A6%E8%A7%A3/">JavaScript数据类型详解</a>
-    </h1>
   
+  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/07/15/JavaScript/JavaScript%E5%86%85%E5%AD%98%E8%AF%A6%E8%A7%A3/">
 
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="zed">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Zed">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          
+            <a href="/2020/07/15/JavaScript/JavaScript%E5%86%85%E5%AD%98%E8%AF%A6%E8%A7%A3/" class="post-title-link" itemprop="url">JavaScript内存详解</a>
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-07-15 11:51:11" itemprop="dateCreated datePublished" datetime="2020-07-15T11:51:11+08:00">2020-07-15</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-01-16 17:12:27" itemprop="dateModified" datetime="2020-01-16T17:12:27+08:00">2020-01-16</time>
+              </span>
+
+          
+
+        </div>
       </header>
+
     
-    <div class="article-entry" itemprop="articleBody">
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
       
-        <h2 id="导读"><a href="#导读" class="headerlink" title="导读"></a>导读</h2><p>学习<span style="background: #ffebcc; color: #f90"> JavaScript </span>最先接触到的是变量和类型，在编写代码时，使用变量看似简单，但是往往看起来最简单的东西往往还隐藏着很多你不了解、或者容易犯错的知识，比如下面几个问题：</p>
+          <h2 id="导读"><a href="#导读" class="headerlink" title="导读"></a>导读</h2><p>你在编写代码时，是否有疑问过，编写的代码存储于哪里呢？<br>JavaScript 是在创建变量（对象，字符串等）时自动进行了分配内存，并且在不使用它们时&quot;自动&quot;释放。 释放的过程称为垃圾回收；也许是这个&quot;自动&quot;的词语混淆了大家忽略了对内存的管理，然而，了解内存机制是我们进阶 JavaScript 的必然要求；因为很多相关知识的背后都会牵扯到内存管理，比如，浅拷贝与深拷贝的原理、值传递与引用传递、闭包的问题等等；所以了解JS内存机制不仅有助于我们理解 JavaScript 相关的知识，而且还能提高我们的代码质量，打造高性能的应用。</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2020/07/15/JavaScript/JavaScript%E5%86%85%E5%AD%98%E8%AF%A6%E8%A7%A3/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+        
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/06/30/JavaScript/JavaScript%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B%E8%AF%A6%E8%A7%A3/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="zed">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Zed">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          
+            <a href="/2019/06/30/JavaScript/JavaScript%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B%E8%AF%A6%E8%A7%A3/" class="post-title-link" itemprop="url">JavaScript数据类型详解</a>
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2019-06-30 15:54:28" itemprop="dateCreated datePublished" datetime="2019-06-30T15:54:28+08:00">2019-06-30</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-01-16 14:25:29" itemprop="dateModified" datetime="2020-01-16T14:25:29+08:00">2020-01-16</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="导读"><a href="#导读" class="headerlink" title="导读"></a>导读</h2><p>学习<span style="background: #ffebcc; color: #f90"> JavaScript </span>最先接触到的是变量和类型，在编写代码时，使用变量看似简单，但是往往看起来最简单的东西往往还隐藏着很多你不了解、或者容易犯错的知识，比如下面几个问题：</p>
 <ul>
 <li><span style="background: #ffebcc; color: #f90"> null </span>与<span style="background: #ffebcc; color: #f90"> undefined </span>的区别?</li>
 <li>如何精确的判断变量的类型？</li>
@@ -99,401 +296,190 @@
 <li>JavaScript内存周期、垃圾回收机制及内存泄漏情况？</li>
 </ul>
 <p>如果你还不能很好的解答上面的问题，那说明你还没有完全掌握这部分的知识，希望这边文章可以让你有所收获。</p>
-<h2 id="JavaScript数据类型"><a href="#JavaScript数据类型" class="headerlink" title="JavaScript数据类型"></a>JavaScript数据类型</h2><p>ECMAScript标准种定义了7种数据类型，其又分为6种原始（基本）类型和引用（对象）类型；</p>
-<h3 id="原始类型"><a href="#原始类型" class="headerlink" title="原始类型"></a>原始类型</h3><ul>
-<li>NULL 类型： 只包含一个值：null；</li>
-<li>undefined 类型： 只包含一个值：undefined；</li>
-<li>Boolean 类型： 包含两个值true、false；</li>
-<li>Number 类型： 包含整数、浮点数、Infinity、NaN；</li>
-<li>String 类型： 一串表示文本值的字符序列；</li>
-<li>Symbol 类型： 一种实例是唯一且不可改变的数据类型；</li>
-</ul>
-<h3 id="引用类型（对象类型）"><a href="#引用类型（对象类型）" class="headerlink" title="引用类型（对象类型）"></a>引用类型（对象类型）</h3><p>Object：常用对象Object、数组Array、函数Function、日期Date、正则RegExp；</p>
-<h2 id="原始类型与引用类型的区别"><a href="#原始类型与引用类型的区别" class="headerlink" title="原始类型与引用类型的区别"></a>原始类型与引用类型的区别</h2><h3 id="1、原始类型的不可变性"><a href="#1、原始类型的不可变性" class="headerlink" title="1、原始类型的不可变性"></a>1、原始类型的不可变性</h3><p>原始类型在ECMAScript标准种被定义为<span style="background: #ffebcc; color: #f90"> primitive values </span>，即原始值，代表其值是不可被改变的，原始类型是按值访问的，任何方法都无法修改原始类型的值</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> name = <span class="string">'zed'</span></span><br><span class="line">name.toUpperCase() <span class="comment">// 输出 'ZED'</span></span><br><span class="line"><span class="built_in">console</span>.log(name) <span class="comment">// 输出  'zed'</span></span><br><span class="line">name.age = <span class="number">18</span></span><br><span class="line"><span class="built_in">console</span>.log(name.age) <span class="comment">// 输出 undefined</span></span><br></pre></td></tr></table></figure>
-<p>如上示例，给String类型的name变量调用字母大写方法，打印name，还是原来的值，调用的方法只是产生新的字符串，给其添加属性，打印结果为undefined，所以不论经过什么操作，原始类型的值都无法被改变</p>
-<h3 id="2、比较"><a href="#2、比较" class="headerlink" title="2、比较"></a>2、比较</h3><p>对变量之间进行时，不同类型的比较是不同的：</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> name = <span class="string">'zed'</span></span><br><span class="line"><span class="keyword">let</span> name1 = <span class="string">'zed'</span></span><br><span class="line"><span class="built_in">console</span>.log(name === name1) <span class="comment">// true</span></span><br><span class="line"><span class="keyword">let</span> obj = &#123;<span class="attr">name</span>: <span class="string">'zed'</span>&#125;</span><br><span class="line"><span class="keyword">let</span> obj1 = &#123;<span class="attr">name</span>: <span class="string">'zed'</span>&#125;</span><br><span class="line"><span class="built_in">console</span>.log(obj === obj) <span class="comment">// false</span></span><br></pre></td></tr></table></figure>
-<p>上述例子使用了严格等于比较，对于原始类型，比较时会直接比较它们的值，若相等则为 true，若只是使用 “==”来比较，则不同的原始类型会出现类型的转换，有关类型转换，将在下文讲解。<br>而引用类型之间的比较，是比较它们的引用地址，虽然两个变量在堆中存储的对象具有的属性值都是相等的，但是它们被存储在了不同的存储空间，因此为 false。</p>
-<h3 id="3、复制（赋值）"><a href="#3、复制（赋值）" class="headerlink" title="3、复制（赋值）"></a>3、复制（赋值）</h3><p>对于复制（赋值）的情况，原始类型和引用类型的表现是不一样的：</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 原始类型</span></span><br><span class="line"><span class="keyword">let</span> name = <span class="string">'zed'</span></span><br><span class="line"><span class="keyword">let</span> name1 = name</span><br><span class="line">name1 = <span class="string">'code zed'</span></span><br><span class="line"><span class="built_in">console</span>.log(name) <span class="comment">// 输出zed</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 引用类型</span></span><br><span class="line"><span class="keyword">let</span> obj = &#123;<span class="attr">name</span>: <span class="string">'zed'</span>&#125;</span><br><span class="line"><span class="keyword">let</span> obj2 = obj</span><br><span class="line">obj2.name = <span class="string">'ada'</span></span><br><span class="line"><span class="built_in">console</span>.log(obj.name) <span class="comment">// 输出 ada</span></span><br></pre></td></tr></table></figure>
-<p>如上代码，当我们复制一个原始类型时，此时会在内存中新开辟一个空间用于存储name1，虽然两者值是相同的，但是两者指向的内存空间完全不同，这两个变量参与任何操作都互不影响。<br>当我们复制引用类型的变量时，实际上复制的是栈中存储的<strong>指针（地址）</strong>，指向堆内中的obj，所以obj与obj1都指向了<strong>同一个对象</strong>，因此，操作其中的任意一个变量，另一个变量都会受到影响，这也就是为什么会有浅拷贝和深拷贝的区分了。</p>
-<h3 id="4、值传递和引用传递"><a href="#4、值传递和引用传递" class="headerlink" title="4、值传递和引用传递"></a>4、值传递和引用传递</h3><p>先借助下面的例子，我们来看看什么是值传递？什么是引用传递？</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> name = <span class="string">'zed'</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">func</span>(<span class="params">name</span>) </span>&#123;</span><br><span class="line">  name = <span class="string">'ada'</span></span><br><span class="line">&#125;</span><br><span class="line">func(name)</span><br><span class="line"><span class="built_in">console</span>.log(name) <span class="comment">// 输出 zed</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> obj=&#123;<span class="attr">name</span>: <span class="string">'zed'</span>&#125;</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">func1</span>﻿(<span class="params">obj</span>) </span>&#123;</span><br><span class="line">  obj.name = <span class="string">'ada'</span></span><br><span class="line">&#125;</span><br><span class="line">func1(obj)</span><br><span class="line"><span class="built_in">console</span>.log(obj.name) <span class="comment">// 输出 ada</span></span><br></pre></td></tr></table></figure>
-<p>首先，在ECMAScript标准中规定，所有函数的参数都<strong><em>按值来传递</em></strong>的；<br>函数 <span style="background: #ffebcc; color: #f90"> func(name) </span>，传递的是原始类型的值，name变量将值传递给函数后，就完成了它的使命，函数里如何操作，都不会改变name的值，所以原始类型的变量是值传递；<br>函数 <span style="background: #ffebcc; color: #f90"> func1(obj) </span>，传递的仍然是值，但是这个值是一个指针（地址），指向堆内存对象，并且此时会声明一个局部变量用来存储这个指针，所以此时，传递给函数的值与变量obj都指向了同一个对象，所以在函数操作变量时，相关的变量也会受到影响，<strong>但这并不是代表引用传递</strong>，我们再看下面的例子：</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> obj = &#123;&#125;</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">foo</span>(<span class="params">obj</span>)</span>&#123;</span><br><span class="line">  obj.name = <span class="string">'zed'</span></span><br><span class="line">  obj = &#123;<span class="attr">name</span>: <span class="string">'ada'</span>&#125;</span><br><span class="line">&#125;</span><br><span class="line">foo(obj)</span><br><span class="line"><span class="built_in">console</span>.log(obj.name) <span class="comment">// 输出 'zed'</span></span><br></pre></td></tr></table></figure>
-<p>可见，函数参数传递的并不是变量的<strong>引用</strong>，而是变量拷贝的副本，当变量是原始类型时，这个副本就是值本身，当变量是引用类型时，这个副本是指向堆内存的地址。</p>
-<h2 id="null与undefined的区别"><a href="#null与undefined的区别" class="headerlink" title="null与undefined的区别"></a>null与undefined的区别</h2><h3 id="null"><a href="#null" class="headerlink" title="null"></a>null</h3><p>null 是特殊的一个对象，表示’无’的对象，即此处没有对象，转为数值时为 0；<br>null 用法：</p>
-<ul>
-<li>作为函数的参数，表示该函数的参数不是对象</li>
-<li>作为对象原型链的终点</li>
-<li>作为解除引用，便于垃圾回收</li>
-</ul>
-<h3 id="undefined"><a href="#undefined" class="headerlink" title="undefined"></a>undefined</h3><p>undefined 表示’缺省值’，就是此处应该有一个值，但是还没有定义，转化为数值为 NaN;<br>undefined用法：</p>
-<ul>
-<li>变量被声明了，但没有赋值时，就等于 undefined</li>
-<li>调用函数时，应该提供的参数没有提供，该参数等于 undefined</li>
-<li>对象没有赋值的属性，该属性的值为 undefined</li>
-<li>函数没有返回值时，默认返回 undefined</li>
-</ul>
-<h2 id="Symbol类型"><a href="#Symbol类型" class="headerlink" title="Symbol类型"></a>Symbol类型</h2><p>Symbol类型为ES6新增的原始类型; 表示独一无二的值。  </p>
-<h3 id="Symbol数据类型的使用"><a href="#Symbol数据类型的使用" class="headerlink" title="Symbol数据类型的使用"></a>Symbol数据类型的使用</h3><p>声明symbol类型变量，需调用<span style="background: #ffebcc; color: #f90"> Symbol() </span>方法，并且可传递一个字符串用于描述，当传递的是一个对象类型的参数，则会调用该对象的toString方法，将其转化为一个字符串，说到底，symbol传递的参数只能是字符串</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> sym1 = <span class="built_in">Symbol</span>() <span class="comment">// 输出 Symbol()</span></span><br><span class="line"><span class="keyword">let</span> sym2 = <span class="built_in">Symbol</span>(<span class="string">'zed'</span>) <span class="comment">// 输出 Symbol(zed)</span></span><br><span class="line"><span class="keyword">let</span> obj = &#123;<span class="attr">name</span>: <span class="string">'zed'</span>&#125;</span><br><span class="line"><span class="keyword">let</span> sym3 = <span class="built_in">Symbol</span>(obj) <span class="comment">// 输出 Symbol([object Object])</span></span><br></pre></td></tr></table></figure>
-<p>因为<span style="background: #ffebcc; color: #f90"> Symbol() </span>只是一个方法，所以不能使用构造函数的方式来调用，否则会报错：</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> sym = <span class="keyword">new</span> <span class="built_in">Symbol</span>() <span class="comment">// 报错Uncaught TypeError: Symbol is not a constructor</span></span><br></pre></td></tr></table></figure>
-<h3 id="Symbol数据类型的特性"><a href="#Symbol数据类型的特性" class="headerlink" title="Symbol数据类型的特性"></a>Symbol数据类型的特性</h3><h5 id="1、唯一性"><a href="#1、唯一性" class="headerlink" title="1、唯一性"></a>1、唯一性</h5><p>每一个使用<span style="background: #ffebcc; color: #f90"> Symbol() </span>方法声明的变量都是独一无二的；</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> sym1 = <span class="built_in">Symbol</span>(<span class="string">'zed'</span>) <span class="comment">// 输出 Symbol(zed)</span></span><br><span class="line"><span class="keyword">let</span> sym2 = <span class="built_in">Symbol</span>(<span class="string">'zed'</span>) <span class="comment">// 输出 Symbol(zed)</span></span><br><span class="line"><span class="built_in">console</span>.log(sym1 === sym2) <span class="comment">// 输出false</span></span><br></pre></td></tr></table></figure>
-<p>可见，即使创建两个完全一样的Symbol变量，它们也是不相等的；<br>若想创建相等的symbol变量，则需使用 Symbol 提供的<span style="background: #ffebcc; color: #f90"> Symbol.for(key) </span>:</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> sym1 = <span class="built_in">Symbol</span>.for(<span class="string">'zed'</span>)</span><br><span class="line"><span class="keyword">let</span> sym2 = <span class="built_in">Symbol</span>.for(<span class="string">'zed'</span>)</span><br><span class="line"><span class="built_in">console</span>.log(sym1 === sym2) <span class="comment">// 输出 true</span></span><br></pre></td></tr></table></figure>
-<p>当使用<span style="background: #ffebcc; color: #f90"> Symbol.for(key) </span>创建相等的变量时，若已声明的相同的变量，则返回该变量，否则将使用给的的key在全局注册一个新的symbol变量，若想查找是否存在key的symbol变量，可使用<span style="background: #ffebcc; color: #f90"> Symbol.keyFor(key) </span>来查找。</p>
-<h5 id="2、原始类型"><a href="#2、原始类型" class="headerlink" title="2、原始类型"></a>2、原始类型</h5><p>Symbol 数据类型归属于原始类型。</p>
-<h5 id="3、不可枚举性"><a href="#3、不可枚举性" class="headerlink" title="3、不可枚举性"></a>3、不可枚举性</h5><p>当使用 Symbol值作为对象的属性名时，可以保证对象不会出现重名属性，但使用 for…in 和 for…of 是无法遍历到 Symbol值的属性，也无法通过 Object.keys()、Object.getOwnPropertyNames() 获取，需使用<span style="background: #ffebcc; color: #f90"> Object.getOwnPropertySymbols() </span>来获取专门的symbol属性，也可以使用<span style="background: #ffebcc; color: #f90"> Reflect.ownKeys() </span>来获取所有属性，包括常规的属性名。</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> obj = &#123;</span><br><span class="line">  name: <span class="string">'zed'</span>,</span><br><span class="line">  [<span class="built_in">Symbol</span>(<span class="string">'name1'</span>)]: <span class="string">'ada'</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="built_in">Object</span>.getOwnPropertyNames(obj) <span class="comment">//  输出 ["name"] </span></span><br><span class="line"><span class="built_in">Object</span>.keys(obj) <span class="comment">//  输出 ["name"] </span></span><br><span class="line"><span class="keyword">for</span> (<span class="keyword">let</span> key <span class="keyword">in</span> obj) &#123; </span><br><span class="line">  <span class="built_in">console</span>.log(key) <span class="comment">//  输出 name </span></span><br><span class="line">&#125; </span><br><span class="line"><span class="built_in">Object</span>.getOwnPropertySymbols(obj) <span class="comment">// 输出 [Symbol(name1)]</span></span><br><span class="line"><span class="built_in">Reflect</span>.ownKeys(obj)  <span class="comment">//  ["name", Symbol(name1)]</span></span><br></pre></td></tr></table></figure>
-<h3 id="Symbol数据类型的作用"><a href="#Symbol数据类型的作用" class="headerlink" title="Symbol数据类型的作用"></a>Symbol数据类型的作用</h3><p>Symbol 的作用非常的专一，换句话说其设计出来就只有一个目的——<strong>作为对象属性的唯一标识符</strong>，防止对象属性冲突发生。</p>
-<h3 id="Symbol应用场景"><a href="#Symbol应用场景" class="headerlink" title="Symbol应用场景"></a>Symbol应用场景</h3><ul>
-<li>防止XSS</li>
-<li>私有属性</li>
-<li>防止属性名冲突</li>
-</ul>
-<h2 id="装箱与拆箱"><a href="#装箱与拆箱" class="headerlink" title="装箱与拆箱"></a>装箱与拆箱</h2><h3 id="包装类型（临时对象）"><a href="#包装类型（临时对象）" class="headerlink" title="包装类型（临时对象）"></a>包装类型（临时对象）</h3><p>存取字符串、布尔值、数字的属性时创建的临时对象称为<em>包装对象</em>；如<span style="background: #ffebcc; color: #f90"> new String() </span><span style="background: #ffebcc; color: #f90"> new Number() </span><span style="background: #ffebcc; color: #f90"> new Boolean() </span>；<br>虽说是创建基本类型的临时对象，但跟原始类型还是存在本质的区别：</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="literal">true</span> === <span class="keyword">new</span> <span class="built_in">Boolean</span>(<span class="literal">true</span>) <span class="comment">// false</span></span><br><span class="line"><span class="number">123</span> === <span class="keyword">new</span> <span class="built_in">Number</span>(<span class="number">123</span>) <span class="comment">// false</span></span><br><span class="line"><span class="string">'zed'</span> === <span class="keyword">new</span> <span class="built_in">String</span>(<span class="string">'zed'</span>) <span class="comment">// false</span></span><br><span class="line"><span class="built_in">console</span>.log(<span class="keyword">typeof</span> <span class="keyword">new</span> <span class="built_in">String</span>(<span class="string">'zed'</span>)) <span class="comment">// object</span></span><br><span class="line"><span class="built_in">console</span>.log(<span class="keyword">typeof</span> <span class="string">'zed'</span>) <span class="comment">// string</span></span><br></pre></td></tr></table></figure>
-<p>包装类型与引用类型的区别主要在于对象的生命周期，使用 new 操作符创建出来的引用类型，会在一直存在于内存中，直到执行作用于离开为止，而 new 的包装类型，则在创建完基本类型后，就会马上被销毁。</p>
-<h3 id="装箱与拆箱-1"><a href="#装箱与拆箱-1" class="headerlink" title="装箱与拆箱"></a>装箱与拆箱</h3><p>装箱：基本类型转换成对应的包装类型。<br>拆箱：引用类型转换为基本类型。</p>
-<p>不知道大家有没有好奇过，既然原始类型无法扩展属性和方法，那么我们在使用原始类型调用方法时，又发生了什么？其实这就涉及到了包装类型，当我们去操作原始类型时，后台会对应的创建一个包装类型的对象，以供我们去调用属性和方法。当方法调用结束后，包装对象又会立即被销毁，例如：</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> name = <span class="string">'zed'</span></span><br><span class="line">name.substring(<span class="number">2</span>) <span class="comment">// d</span></span><br></pre></td></tr></table></figure>
-<p>此时，会经历如下步骤：</p>
-<ul>
-<li>创建一个String的实例;</li>
-<li>在实例上调用substring方法;</li>
-<li>销毁实例;</li>
-</ul>
-<p>整个过程历经三个步骤，所以当我们对原始类型调用方法时，就会自动进行装箱与拆箱的操作。以上以 String类型进行举例，Number 与 Boolean 也是相同的道理。<br>引用类型转基本类型，会遵守EMCAScript规定的<span style="background: #ffebcc; color: #f90"> toPrimitive </span>(一种算法)原则；一般都是调用 toString 和 valueOf() 方法；当然不同类型的转换规则也不一样：</p>
-<ul>
-<li>当引用类型转换为 Number类型，先调用 valueOf，再调用 toString；</li>
-<li>引用类型转换为 String类型，先调用 toString，再调用 valueOf；<br>若 valueOf 和 toString 都不存在，或者没有返回基本类型，则抛出 TypeError 异常。</li>
-</ul>
-<h2 id="JavaScript类型判断方式"><a href="#JavaScript类型判断方式" class="headerlink" title="JavaScript类型判断方式"></a>JavaScript类型判断方式</h2><h3 id="typeof"><a href="#typeof" class="headerlink" title="typeof"></a>typeof</h3><p>适用场景：<span style="background: #ffebcc; color: #f90"> typeof </span>主要适用于除 nul l以外原始类型/及函数的判断，无法用于判断引用类型；</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">typeof</span> <span class="string">'zed'</span>  <span class="comment">// string</span></span><br><span class="line"><span class="keyword">typeof</span> <span class="number">123</span>  <span class="comment">// number</span></span><br><span class="line"><span class="keyword">typeof</span> <span class="literal">true</span>  <span class="comment">// boolean</span></span><br><span class="line"><span class="keyword">typeof</span> <span class="built_in">Symbol</span>()  <span class="comment">// symbol</span></span><br><span class="line"><span class="keyword">typeof</span> <span class="literal">undefined</span>  <span class="comment">// undefined</span></span><br><span class="line"><span class="keyword">typeof</span> <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;&#125;  <span class="comment">// function</span></span><br></pre></td></tr></table></figure>
-<p>不适用场景：引用类型及 null</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">typeof</span> <span class="literal">null</span> <span class="comment">// object</span></span><br><span class="line"><span class="keyword">typeof</span> &#123;&#125; <span class="comment">// object</span></span><br><span class="line"><span class="keyword">typeof</span> [] <span class="comment">// object﻿</span></span><br><span class="line"><span class="keyword">typeof</span> <span class="keyword">new</span> <span class="built_in">Date</span>() <span class="comment">// object</span></span><br></pre></td></tr></table></figure>
-<h3 id="instanceof"><a href="#instanceof" class="headerlink" title="instanceof"></a>instanceof</h3><p>适用场景：具体的引用类型;</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[] <span class="keyword">instanceof</span> <span class="built_in">Array</span> <span class="comment">// true</span></span><br><span class="line"><span class="keyword">new</span> <span class="built_in">Date</span>() <span class="keyword">instanceof</span> <span class="built_in">Date</span> <span class="comment">// true</span></span><br><span class="line"><span class="keyword">new</span> <span class="built_in">RegExp</span>() <span class="keyword">instanceof</span> <span class="built_in">RegExp</span> <span class="comment">// true</span></span><br></pre></td></tr></table></figure>
-<p><span style="background: #ffebcc; color: #f90"> instanceof </span>检测的是原型，且无法判断所以判断出来的数据也不太准确</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[] <span class="keyword">instanceof</span> <span class="built_in">Object</span> <span class="comment">// true</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">func</span>(<span class="params"></span>) </span>&#123;&#125;</span><br><span class="line">func <span class="keyword">instanceof</span> <span class="built_in">Object</span> <span class="comment">// true</span></span><br><span class="line"><span class="number">1</span> <span class="keyword">instanceof</span> <span class="built_in">Number</span> <span class="comment">// false</span></span><br><span class="line"><span class="string">'zed'</span> <span class="keyword">instanceof</span> <span class="built_in">String</span> <span class="comment">// false</span></span><br></pre></td></tr></table></figure>
-<h3 id="toString-NaN"><a href="#toString-NaN" class="headerlink" title="toString"></a>toString</h3><p><span style="background: #ffebcc; color: #f90"> toString() </span>是 Object 的原型方法，调用该方法，默认返回当前对象的 [[Class]] 。这是一个内部属性，其格式为 [object xxx] ，其中 xxx 就是对象的类型。各个类型的转化如下：</p>
-<table>
-<thead>
-<tr>
-<th>类型</th>
-<th>转换方法</th>
-<th>结果</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>String</td>
-<td>Object.prototype.toString.call(‘’)</td>
-<td>[object String]</td>
-</tr>
-<tr>
-<td>Number</td>
-<td>Object.prototype.toString.call(1)</td>
-<td>[object Number]</td>
-</tr>
-<tr>
-<td>Boolean</td>
-<td>Object.prototype.toString.call(true)</td>
-<td>[object Boolean]</td>
-</tr>
-<tr>
-<td>Symbol</td>
-<td>Object.prototype.toString.call(Symbol())</td>
-<td>[object Symbol]</td>
-</tr>
-<tr>
-<td>Undefined</td>
-<td>Object.prototype.toString.call(undefined)</td>
-<td>[object Undefined]</td>
-</tr>
-<tr>
-<td>Null</td>
-<td>Object.prototype.toString.call(null)</td>
-<td>[object Null]</td>
-</tr>
-<tr>
-<td>Function</td>
-<td>Object.prototype.toString.call(new Function())</td>
-<td>[object Function]</td>
-</tr>
-<tr>
-<td>Date</td>
-<td>Object.prototype.toString.call(new Date())</td>
-<td>[object Date]</td>
-</tr>
-<tr>
-<td>Array</td>
-<td>Object.prototype.toString.call([])</td>
-<td>[object Array]</td>
-</tr>
-<tr>
-<td>RegExp</td>
-<td>Object.prototype.toString.call(new RegExp())</td>
-<td>[object RegExp]</td>
-</tr>
-<tr>
-<td>Error</td>
-<td>Object.prototype.toString.call(new Error())</td>
-<td>[object Error]</td>
-</tr>
-<tr>
-<td>HTMLDocument</td>
-<td>Object.prototype.toString.call(document)</td>
-<td>[object HTMLDocument]</td>
-</tr>
-<tr>
-<td>window</td>
-<td>Object.prototype.toString.call(window)</td>
-<td>[object global]</td>
-</tr>
-</tbody></table>
-<p>比较以上三种检测类型的方法，<span style="background: #ffebcc; color: #f90"> typeof </span>对原始类型的检测比较准确，<span style="background: #ffebcc; color: #f90"> instanceof </span>检测具体的引用类型效果比较明显，而使用<span style="background: #ffebcc; color: #f90"> toString </span>则可以检测任意变量的具体类型。</p>
-<h2 id="JavaScript类型转换"><a href="#JavaScript类型转换" class="headerlink" title="JavaScript类型转换"></a>JavaScript类型转换</h2><p>因为 JavaScript 是<strong>弱类型</strong>的语言，所以，类型之间的转换是非常频繁的。<br>类型转换分为两种，一种是隐式的转换，即程序自动帮我们转换，另一种是强制转换，常常为我们手动进行的类型转换。<br>强制转换这里就不过多说明，我们来看看隐式转换常常发生的情景：</p>
-<table>
-<thead>
-<tr>
-<th>原始值</th>
-<th>转换为Number</th>
-<th>转换为String</th>
-<th>转换为Boolean</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>false</td>
-<td>0</td>
-<td>‘false’</td>
-<td>false</td>
-</tr>
-<tr>
-<td>true</td>
-<td>1</td>
-<td>‘true’</td>
-<td>true</td>
-</tr>
-<tr>
-<td>0</td>
-<td>0</td>
-<td>‘0’</td>
-<td>false</td>
-</tr>
-<tr>
-<td>1</td>
-<td>1</td>
-<td>‘1’</td>
-<td>true</td>
-</tr>
-<tr>
-<td>‘0’</td>
-<td>0</td>
-<td>‘0’</td>
-<td>true</td>
-</tr>
-<tr>
-<td>‘000’</td>
-<td>0</td>
-<td>‘000’</td>
-<td>true</td>
-</tr>
-<tr>
-<td>‘1’</td>
-<td>1</td>
-<td>‘1’</td>
-<td>true</td>
-</tr>
-<tr>
-<td>NaN</td>
-<td>NaN</td>
-<td>‘NaN’</td>
-<td>false</td>
-</tr>
-<tr>
-<td>Infinity</td>
-<td>Infinity</td>
-<td>‘Infinity’</td>
-<td>true</td>
-</tr>
-<tr>
-<td>-Infinity</td>
-<td>-Infinity</td>
-<td>‘-Infinity’</td>
-<td>true</td>
-</tr>
-<tr>
-<td>‘’</td>
-<td>0</td>
-<td>‘’</td>
-<td>false</td>
-</tr>
-<tr>
-<td>‘zed’</td>
-<td>NaN</td>
-<td>‘zed’</td>
-<td>true</td>
-</tr>
-<tr>
-<td>[]</td>
-<td>0</td>
-<td>‘’</td>
-<td>true</td>
-</tr>
-<tr>
-<td>[1]</td>
-<td>1</td>
-<td>‘1’</td>
-<td>true</td>
-</tr>
-<tr>
-<td>[1, 2]</td>
-<td>NaN</td>
-<td>‘1,2’</td>
-<td>true</td>
-</tr>
-<tr>
-<td>[‘zed’]</td>
-<td>NaN</td>
-<td>‘zed’</td>
-<td>true</td>
-</tr>
-<tr>
-<td>[‘zed’, ‘ada’]</td>
-<td>NaN</td>
-<td>‘zed,ada’</td>
-<td>true</td>
-</tr>
-<tr>
-<td>function(){}</td>
-<td>NaN</td>
-<td>‘function(){}’</td>
-<td>true</td>
-</tr>
-<tr>
-<td>{}</td>
-<td>NaN</td>
-<td>‘[object Object]’</td>
-<td>true</td>
-</tr>
-<tr>
-<td>null</td>
-<td>0</td>
-<td>‘null’</td>
-<td>false</td>
-</tr>
-<tr>
-<td>undefined</td>
-<td>NaN</td>
-<td>‘undefined’</td>
-<td>false</td>
-</tr>
-</tbody></table>
-<p>如上表为一般类型的转换规则。当数组调用 toString 方法时，会将数组扁平化，即直接将数组里的元素按逗号分隔符隔开组成字符串。<br>在 if语句或逻辑语句中，会转换成 Boolean 类型来判断，如下是转换为 false 的情况：</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="literal">null</span>, <span class="literal">undefined</span>, <span class="string">''</span>, <span class="literal">NaN</span>, <span class="number">0</span>, <span class="literal">false</span></span><br></pre></td></tr></table></figure>
-<p>各种数学运算，会先将类型转换成Number类型后再进行具体的运算；但是当遇到 “+”运算符时，需要特别注意，因为涉及字符串的拼接，其转换类型具体如下：</p>
-<ul>
-<li>规则一：当一侧为 String 类型，被识别为字符串拼接，并会优先将另一侧转换为字符串类型;</li>
-<li>规则二：当一侧为 Number 类型，另一侧为原始类型，则将原始类型转换为 Number 类型;</li>
-<li>规则三：当一侧为 Number 类型，另一侧为引用类型，将引用类型和 Number 类型转换成字符串后拼接;</li>
-</ul>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">123</span> + <span class="string">'123'</span> <span class="comment">// 123123   （规则一）</span></span><br><span class="line"><span class="number">123</span> + <span class="literal">null</span>  <span class="comment">// 123    （规则二）</span></span><br><span class="line"><span class="number">123</span> + <span class="literal">true</span> <span class="comment">// 124    （规则二）</span></span><br><span class="line"><span class="number">123</span> + &#123;&#125;  <span class="comment">// "123[object Object]" （规则三）</span></span><br><span class="line"><span class="number">123</span> + [] <span class="comment">// "123" （规则三）</span></span><br><span class="line"><span class="number">123</span> + [<span class="number">1</span>,<span class="string">'zed'</span>] <span class="comment">// "1231,zed" （规则三）</span></span><br></pre></td></tr></table></figure>
-
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2019/06/30/JavaScript/JavaScript%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B%E8%AF%A6%E8%A7%A3/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
       
     </div>
-    <footer class="article-footer">
-      <a data-url="http://yoursite.com/2019/06/30/JavaScript%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B%E8%AF%A6%E8%A7%A3/" data-id="ck5g5mdk60000gr548n4nbmzf" class="article-share-link">Share</a>
-      
-      
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+  </div>
+
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let activeClass = CONFIG.comments.activeClass;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="zed"
+      src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">zed</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">2</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/CBCzed" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;CBCzed" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">zed</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v4.2.0
+  </div>
+  <span class="post-meta-divider">|</span>
+  <div class="theme-info">主题 – <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> v7.7.0
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
     </footer>
   </div>
-  
-</article>
-
 
   
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
 
 
-</section>
-        
-          <aside id="sidebar">
-  
-    
+<script src="/js/schemes/pisces.js"></script>
 
-  
-    
 
-  
-    
-  
-    
-  <div class="widget-wrap">
-    <h3 class="widget-title">归档</h3>
-    <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/06/">六月 2019</a></li></ul>
-    </div>
-  </div>
+<script src="/js/next-boot.js"></script>
+
+
 
 
   
-    
-  <div class="widget-wrap">
-    <h3 class="widget-title">最新文章</h3>
-    <div class="widget">
-      <ul>
-        
-          <li>
-            <a href="/2019/06/30/JavaScript%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B%E8%AF%A6%E8%A7%A3/">JavaScript数据类型详解</a>
-          </li>
-        
-      </ul>
-    </div>
-  </div>
 
-  
-</aside>
-        
-      </div>
-      <footer id="footer">
-  
-  <div class="outer">
-    <div id="footer-info" class="inner">
-      &copy; 2020 zed<br>
-      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
-    </div>
-  </div>
-</footer>
-    </div>
-    <nav id="mobile-nav">
-  
-    <a href="/" class="mobile-nav-link">Home</a>
-  
-    <a href="/archives" class="mobile-nav-link">Archives</a>
-  
-</nav>
-    
 
-<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+
+
+
+
+
+
+
+
+
 
 
   
-<link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
 
   
-<script src="/fancybox/jquery.fancybox.pack.js"></script>
 
-
-
-
-<script src="/js/script.js"></script>
-
-
-
-
-  </div>
 </body>
 </html>

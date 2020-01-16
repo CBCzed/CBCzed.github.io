@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    hostname: new URL('http://yoursite.com').hostname,
+    root: '/',
+    scheme: 'Gemini',
+    version: '7.7.0',
+    exturl: false,
+    sidebar: {"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},
+    copycode: {"enable":false,"show_result":false,"style":null},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":false},
+    bookmark: {"enable":false,"color":"#222","save":"auto"},
+    fancybox: false,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    comments: {"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},
+    algolia: {
+      appID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: '',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}
+  };
+</script>
+
+  <meta name="description" content="导读你在编写代码时，是否有疑问过，编写的代码存储于哪里呢？JavaScript 是在创建变量（对象，字符串等）时自动进行了分配内存，并且在不使用它们时&quot;自动&quot;释放。 释放的过程称为垃圾回收；也许是这个&quot;自动&quot;的词语混淆了大家忽略了对内存的管理，然而，了解内存机制是我们进阶 JavaScript 的必然要求；因为很多相关知识的背后都会牵扯到内存管理，比如，浅拷">
+<meta property="og:type" content="article">
+<meta property="og:title" content="JavaScript内存详解">
+<meta property="og:url" content="http://yoursite.com/2020/07/15/JavaScript/JavaScript%E5%86%85%E5%AD%98%E8%AF%A6%E8%A7%A3/index.html">
+<meta property="og:site_name" content="Zed">
+<meta property="og:description" content="导读你在编写代码时，是否有疑问过，编写的代码存储于哪里呢？JavaScript 是在创建变量（对象，字符串等）时自动进行了分配内存，并且在不使用它们时&quot;自动&quot;释放。 释放的过程称为垃圾回收；也许是这个&quot;自动&quot;的词语混淆了大家忽略了对内存的管理，然而，了解内存机制是我们进阶 JavaScript 的必然要求；因为很多相关知识的背后都会牵扯到内存管理，比如，浅拷">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://yoursite.com/images/JavaScript/stack.jpg">
+<meta property="og:image" content="http://yoursite.com/images/JavaScript/heap.jpg">
+<meta property="og:image" content="http://yoursite.com/images/JavaScript/life-cycle.jpg">
+<meta property="og:image" content="http://yoursite.com/images/JavaScript/memory.jpg">
+<meta property="og:image" content="http://yoursite.com/images/JavaScript/memory-leak.jpg">
+<meta property="article:published_time" content="2020-07-15T03:51:11.000Z">
+<meta property="article:modified_time" content="2020-01-16T09:12:27.283Z">
+<meta property="article:author" content="zed">
+<meta property="article:tag" content="JavaScript">
+<meta property="article:tag" content="博客">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://yoursite.com/images/JavaScript/stack.jpg">
+
+<link rel="canonical" href="http://yoursite.com/2020/07/15/JavaScript/JavaScript%E5%86%85%E5%AD%98%E8%AF%A6%E8%A7%A3/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true
+  };
+</script>
+
+  <title>JavaScript内存详解 | Zed</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Zed</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+  </div>
+
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
+
+  </li>
+  </ul>
+
+</nav>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/07/15/JavaScript/JavaScript%E5%86%85%E5%AD%98%E8%AF%A6%E8%A7%A3/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="zed">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Zed">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          JavaScript内存详解
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-07-15 11:51:11" itemprop="dateCreated datePublished" datetime="2020-07-15T11:51:11+08:00">2020-07-15</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-01-16 17:12:27" itemprop="dateModified" datetime="2020-01-16T17:12:27+08:00">2020-01-16</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="导读"><a href="#导读" class="headerlink" title="导读"></a>导读</h2><p>你在编写代码时，是否有疑问过，编写的代码存储于哪里呢？<br>JavaScript 是在创建变量（对象，字符串等）时自动进行了分配内存，并且在不使用它们时&quot;自动&quot;释放。 释放的过程称为垃圾回收；也许是这个&quot;自动&quot;的词语混淆了大家忽略了对内存的管理，然而，了解内存机制是我们进阶 JavaScript 的必然要求；因为很多相关知识的背后都会牵扯到内存管理，比如，浅拷贝与深拷贝的原理、值传递与引用传递、闭包的问题等等；所以了解JS内存机制不仅有助于我们理解 JavaScript 相关的知识，而且还能提高我们的代码质量，打造高性能的应用。</p>
+<a id="more"></a>
+
+<h2 id="内存模型"><a href="#内存模型" class="headerlink" title="内存模型"></a>内存模型</h2><p>JS内存空间分为<strong>栈(stack)</strong>、<strong>堆(heap)</strong>、<strong>池(也属于栈)</strong>。 其中<strong>栈</strong>存放变量，<strong>堆</strong>存放复杂对象，<strong>池</strong>存放常量，总的来说(也叫常量池)，内存模型分为<strong>栈</strong>和<strong>堆</strong>两大类。</p>
+<h3 id="原始类型与栈内存"><a href="#原始类型与栈内存" class="headerlink" title="原始类型与栈内存"></a>原始类型与栈内存</h3><p>JavaScript中的原始数据类型：Number String Null Undefined Boolean Symbol()，这些值都有固定的大小，往往都保存在栈内存中（闭包除外），由系统自动分配存储空间。我们可以直接操作保存在栈内存空间的值，因此原始数据类型都是按值访问，数据在栈内存中的存储与使用方式类似于数据结构中的堆栈数据结构，遵循后进先出的原则；</p>
+<p>接下来，我们借用一张图来说明栈的存取方式：</p>
+<p><img src="/images/JavaScript/stack.jpg" alt=""></p>
+<p>栈空间遵循的是先进后出，后进先出；如上图的乒乓球的存放方式一样。处于盒子中最顶层的乒乓球5，它一定是最后被放进去，但可以最先被使用。而我们想要使用底层的乒乓球1，就必须将上面的4个乒乓球取出来，让乒乓球1处于盒子顶层。</p>
+<h3 id="引用类型与堆内存"><a href="#引用类型与堆内存" class="headerlink" title="引用类型与堆内存"></a>引用类型与堆内存</h3><p>JS的引用类型：Object、Array 等，其值大小不固定，引用数据类型的值是保存在堆内存中的对象。JS不允许直接访问堆内存中的位置，因此我们不能直接操作对象的堆内存空间，在操作对象时，实际上是在操作对象的引用而不是实际的对象。这里的引用可以简单的理解为保存在栈内存中的一个内存地址，该地址指向堆内存中的对象。虽然引用类型的值大小不固定，但存储于栈内存的地址大小是固定的，所以JS的对象是按引用访问的。<br>堆数据结构是一种树状结构；为了能更好的理解堆内存与对象的关系，我们用如下例子来说明：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> a1 = <span class="number">0</span>;   <span class="comment">// 变量对象</span></span><br><span class="line"><span class="keyword">let</span> a2 = <span class="string">'this is string'</span>; <span class="comment">// 变量对象</span></span><br><span class="line"><span class="keyword">let</span> a3 = <span class="literal">null</span>; <span class="comment">// 变量对象</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> b = &#123; <span class="attr">m</span>: <span class="number">20</span> &#125;; <span class="comment">// 变量b存在于变量对象中，&#123;m: 20&#125; 作为对象存在于堆内存中</span></span><br><span class="line"><span class="keyword">let</span> c = [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>]; <span class="comment">// 变量c存在于变量对象中，[1, 2, 3] 作为对象存在于堆内存中</span></span><br></pre></td></tr></table></figure>
+<p><img src="/images/JavaScript/heap.jpg" alt=""></p>
+<p>因此当我们要访问堆内存中的引用数据类型时，实际上我们首先是从栈内存中获取了该对象的引用地址（或者地址指针），然后再从堆内存中取得我们需要的数据。</p>
+<p>举一个我们比较容易搞不清楚的知识，浅拷贝与深拷贝：<br>首先需要明确的一点是，浅拷贝和深拷贝是只针对Object和Array这样的引用数据类型的，对于原始类型是没有深浅拷贝的概念。</p>
+<ul>
+<li>浅拷贝只复制指向某个对象的指针，而不复制对象本身，新旧对象还是共享同一块内存；</li>
+<li>深拷贝会另外创造一个一模一样的对象，新对象跟原对象不共享内存，修改新对象不会改到原对象；</li>
+</ul>
+<p>浅拷贝：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> obj1 =&#123;</span><br><span class="line">  name: <span class="string">'zed'</span>,</span><br><span class="line">  heros: &#123;</span><br><span class="line">    name: <span class="string">'yasuo'</span>,</span><br><span class="line">    age: <span class="number">18</span>  </span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> obj2 = <span class="built_in">Object</span>.assign(&#123;&#125;, obj1)</span><br><span class="line">obj2.heros.age = <span class="number">20</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">console</span>.log(obj1) <span class="comment">// 输出 obj1 &#123;name: 'zed', heros: &#123;name: 'yasuo', age: 20&#125;&#125;</span></span><br><span class="line"><span class="built_in">console</span>.log(obj2) <span class="comment">// 输出 obj1 &#123;name: 'zed', heros: &#123;name: 'yasuo', age: 20&#125;&#125;</span></span><br></pre></td></tr></table></figure>
+<p>如上，使用<span style="background: #ffebcc; color: #f90"> Object.assign() </span>实现了一个浅拷贝，当改变obj2中的 heros.age 后，obj1 也跟着改变了，这是因为浅拷贝在拷贝 heros 时，虽说内存会重新开辟个空间给 obj2，但拷贝 heros 时拷贝的是存储于栈内存的地址，与 obj1 指向了同一对象，所以当 obj2 被改变时，obj1 也会跟着改变。<br>常见的浅拷贝方式还有<span style="background: #ffebcc; color: #f90"> Array.prototype.concat() </span><span style="background: #ffebcc; color: #f90"> Array.prototype.slice() </span></p>
+<p>深拷贝：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> obj1 =&#123;</span><br><span class="line">  name: <span class="string">'zed'</span>,</span><br><span class="line">  heros: &#123;</span><br><span class="line">    name: <span class="string">'yasuo'</span>,</span><br><span class="line">    age: <span class="number">18</span>  </span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> obj2 = deepClone(obj1)</span><br><span class="line">obj2.heros.age = <span class="number">20</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">console</span>.log(obj1) <span class="comment">// 输出 obj1 &#123;name: 'zed', heros: &#123;name: 'yasuo', age: 18&#125;&#125;</span></span><br><span class="line"><span class="built_in">console</span>.log(obj2) <span class="comment">// 输出 obj1 &#123;name: 'zed', heros: &#123;name: 'yasuo', age: 20&#125;&#125;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//定义检测数据类型的功能函数</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">checkedType</span>(<span class="params">target</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="built_in">Object</span>.prototype.toString.call(target).slice(<span class="number">8</span>, <span class="number">-1</span>)</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//实现深度克隆---对象/数组</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">deepClone</span>(<span class="params">target</span>) </span>&#123;</span><br><span class="line">  <span class="comment">//判断拷贝的数据类型</span></span><br><span class="line">  <span class="comment">//初始化变量result 成为最终克隆的数据</span></span><br><span class="line">  <span class="keyword">let</span> result, targetType = checkedType(target)</span><br><span class="line">  <span class="keyword">if</span> (targetType === <span class="string">'Object'</span>) &#123;</span><br><span class="line">        result = &#123;&#125;</span><br><span class="line">  &#125; <span class="keyword">else</span> <span class="keyword">if</span> (targetType === <span class="string">'Array'</span>) &#123;</span><br><span class="line">     result = []</span><br><span class="line">  &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">     <span class="keyword">return</span> target</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="comment">//遍历目标数据</span></span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">let</span> key <span class="keyword">in</span> target) &#123;</span><br><span class="line">    <span class="comment">//获取遍历数据结构的每一项值。</span></span><br><span class="line">    <span class="keyword">let</span> value = target[key]</span><br><span class="line">    <span class="comment">//判断目标结构里的每一值是否存在对象/数组</span></span><br><span class="line">    <span class="keyword">if</span> (checkedType(value) === <span class="string">'Object'</span> || checkedType(value) === <span class="string">'Array'</span>) &#123;</span><br><span class="line">      <span class="comment">//对象/数组里嵌套了对象/数组</span></span><br><span class="line">      <span class="comment">//继续遍历获取到value值</span></span><br><span class="line">      result[i] = deepClone(value)</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123; <span class="comment">//获取到value值是基本的数据类型或者是函数。</span></span><br><span class="line">      result[key] = value;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> result</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="built_in">console</span>.log(obj1) <span class="comment">// 输出 obj1 &#123;name: 'zed', heros: &#123;name: 'yasuo', age: 20&#125;&#125;</span></span><br><span class="line"><span class="built_in">console</span>.log(obj2) <span class="comment">// 输出 obj1 &#123;name: 'zed', heros: &#123;name: 'yasuo', age: 20&#125;&#125;</span></span><br></pre></td></tr></table></figure>
+<p>如上，使用递归方式实现了深度克隆，当 obj2 使用<span style="background: #ffebcc; color: #f90"> deepClone </span>方法时，将 obj1 的中的每一个值都重新赋给了 obj2，所以 obj2 拷贝的并不是 heros 的内存地址，而是存储于对内中的具体值，所以当 obj 发生改变时，obj1 自然不会受 obj2 改变的影响。<br>常见的深拷贝方式还有<span style="background: #ffebcc; color: #f90"> JSON.parse(JSON.stringify(object)) </span>，但该方法不能拷贝属性值为函数、null、undefined</p>
+<p>总的来说，深浅拷贝都会开辟新的内存空间；浅拷贝拷贝的是引用类型的第一层数据，对于子数据还是引用类型的，拷贝的是其地址；而深拷贝拷贝的是整个引用类型的具体值。</p>
+<h2 id="内存生命周期"><a href="#内存生命周期" class="headerlink" title="内存生命周期"></a>内存生命周期</h2><p>无论使用什么编程语言，内存生命周期基本是一致的：</p>
+<p><img src="/images/JavaScript/life-cycle.jpg" alt=""></p>
+<p>JS环境中分配的内存一般有如下三个步骤的生命周期：</p>
+<ul>
+<li>分配内存： 内存由操作系统分配，允许程序使用它；当声明变量、函数、对象的时，系统会自动为他们分配内存；</li>
+<li>使用内存：即读写内存，也就是使用变量、函数等；</li>
+<li>内存回收：变量、函数等执行完毕，由垃圾回收机制自动回收不再使用的内存；<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> name = <span class="string">'zed'</span></span><br><span class="line">name.substring(<span class="number">2</span>) <span class="comment">// d</span></span><br><span class="line">name = <span class="literal">null</span> <span class="comment">// 使用完毕，通知JS引擎name变量不在使用可以回收﻿，释放内存</span></span><br></pre></td></tr></table></figure>
+如上的例子，说明了内存的生命周期，至于为什么最后要给 name 赋值为 null，可以阅读我的另外一片博客《JavaScript数据类型》中 null 与 undefined 的区别</li>
+</ul>
+<h2 id="垃圾回收机制"><a href="#垃圾回收机制" class="headerlink" title="垃圾回收机制"></a>垃圾回收机制</h2><p>JavaScript具有自动垃圾收集机制，其基本原理：找出那些不再继续使用的变量，然后释放其占用的内存，垃圾收集器会按照固定的时间间隔周期性地执行这一操作。</p>
+<ul>
+<li>局部变量与全局变量的销毁：<ul>
+<li><strong>局部变量</strong>：局部作用域中，当函数执行完毕，局部变量也就没有存在的必要了，因此垃圾收集器很容易做出判断并回收。当然若局部变量被return出来，且被其他变量引用，则该局部变量不会被销毁，直至引用不存在；</li>
+<li><strong>全局变量</strong>：全局变量什么时候需要自动释放内存空间则很难判断，所以在开发中尽量避免使用全局变量；</li>
+</ul>
+</li>
+<li>以Google的V8引擎为例，V8引擎中所有的JS对象都是通过堆来进行内存分配的：<ul>
+<li><strong>初始分配</strong>：当声明变量并赋值时，V8引擎就会在堆内存中分配给这个变量；</li>
+<li><strong>继续申请</strong>：当已申请的内存不足以存储这个变量时，V8引擎就会继续申请内存，直到堆的大小达到了V8引擎的内存上限为止；</li>
+</ul>
+</li>
+<li>V8引擎对堆内存中的JS对象进行分代管理<ul>
+<li><strong>新生代</strong>：存活周期较短的JS对象，如临时变量、字符串等。</li>
+<li><strong>老生代</strong>：经过多次垃圾回收仍然存活，存活周期较长的对象，如主控制器、服务器对象等。</li>
+</ul>
+</li>
+</ul>
+<p>JavaScript垃圾回收算法，核心思想就是如何判断内存已经不再使用，常用垃圾回收算法有两种：<strong>标记清除</strong>(常用)和<strong>引用计数</strong>(现代浏览器不再使用)  </p>
+<h3 id="标记-清除（mark-and-sweep）"><a href="#标记-清除（mark-and-sweep）" class="headerlink" title="标记-清除（mark and sweep）"></a>标记-清除（mark and sweep）</h3><p>这是 JavaScript 中最常用的垃圾回收方式，标记清除算法假定设置一个叫做根（root）的对象（在Javascript里，根是全局对象(浏览器的环境就是window)）。垃圾回收器将定期从根开始，找所有从根开始引用的对象，然后找这些对象引用的对象……从根开始，垃圾回收器将找到所有可以获得的对象和收集所有不能获得的对象。<br>标记清除法存在一个问题就是效率不太高，因为在标记－清除阶段，整个程序将会等待，所以如果程序出现卡顿的情况，那有可能是收集垃圾的过程。<br>标记清除另外一个问题，就是在清除之后，内存空间是<strong>不连续</strong>的，即出现了<strong>内存碎片</strong>。如果后面需要一个比较大的连续的内存空间时，那将不能满足要求。而<strong>标记-整理</strong>方法可以有效地解决这个问题。标记阶段没有什么不同，只是标记结束后，标记-整理方法会将活着的对象向内存的一边移动，最后清理掉边界的内存。不过可以想象，这种做法的效率没有标记-清除高。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> obj = &#123;<span class="attr">name</span>: <span class="string">'zed'</span>, <span class="attr">age</span>: <span class="number">18</span>&#125; <span class="comment">// 全局定义一个变量obj</span></span><br><span class="line">obj = <span class="literal">null</span> <span class="comment">// obj赋值为null，解除了对&#123;name: 'zed', age: 18&#125;这个对象的引用，释放内存</span></span><br></pre></td></tr></table></figure>
+<p>举个简单例子，当我们全局定义一个 obj 变量，在进入执行环境后，会被标记为“进入环境”，当然具体的标记方式可能不是如此；当变量被赋值为 null 后，即表示引用结束，被标记为“离开环境”；当垃圾收集器执行时，obj 变量就会被回收，释放其所占用的内存。</p>
+<h3 id="引用计数（reference-counting）"><a href="#引用计数（reference-counting）" class="headerlink" title="引用计数（reference counting）"></a>引用计数（reference counting）</h3><p>这是最初级的垃圾收集算法。此算法把”对象是否不再需要”简化定义为”对象有没有其他对象引用到它”。如果没有引用指向该对象（零引用），对象将被垃圾回收机制回收。<br>引用计数的含义是跟踪记录每个值被引用的次数。当声明了一个变量并将一个引用类型赋值给该变量时，则这个值的引用次数就是1。相反，如果包含对这个值引用的变量又取得了另外一个值，则这个值的引用次数就减1。当这个引用次数变成0时，则说明没有办法再访问这个值了，因而就可以将其所占的内存空间给收回来。这样，垃圾收集器下次再运行时，它就会释放那些引用次数为0的值所占的内存。<br>有一种情况是特例，就是循环引用:</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">referenceCounting</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">let</span> obj1 = <span class="keyword">new</span> <span class="built_in">Object</span>()</span><br><span class="line">  <span class="keyword">let</span> obj2 = <span class="keyword">new</span> <span class="built_in">Object</span>()</span><br><span class="line">  obj1.name = obj2</span><br><span class="line">  obj2.name = obj1</span><br><span class="line">&#125;</span><br><span class="line">referenceCounting()</span><br></pre></td></tr></table></figure>
+<p>如上，obj1 的属性name引用了 obj2，而 obj2 的属性 name 又引用了 obj1，所以当函数执行完毕时，obj1、obj2的引用计数并不会为0，也就导致了，这两个变量不会被回收，如果过多的这个函数，就会造成大量的循环引用，最终导致内存泄漏。</p>
+<h2 id="内存泄漏"><a href="#内存泄漏" class="headerlink" title="内存泄漏"></a>内存泄漏</h2><p>内存泄漏是指程序中已动态分配的堆内存由于某种原因程序未释放或无法释放，造成系统内存的浪费，导致程序运行速度减慢甚至系统崩溃等严重后果</p>
+<h3 id="内存泄漏的常见场景"><a href="#内存泄漏的常见场景" class="headerlink" title="内存泄漏的常见场景"></a>内存泄漏的常见场景</h3><ul>
+<li>缓存</li>
+<li>作用域未释放（闭包）</li>
+<li>全局变量过多（全局变量不会被垃圾回收机制回收，除非手动赋值为null）</li>
+<li>定时器未清除</li>
+<li>事件监听未清空</li>
+<li>DOM的引用</li>
+</ul>
+<p><img src="/images/JavaScript/memory.jpg" alt=""></p>
+<p>如上图，图中的 Nodes（绿线）和 JS heap（蓝线），两种线的走势，都不平稳，且在某些时候有回落时，也没有在最低位，所以表明存在内存泄漏。<br>再看下图的 memory 快照，是使用 memory 的 Allocation instrumentation on timeline 且勾选 Record allocation stack，该模式是使用内存分配时间来确定JS堆内存泄漏。</p>
+<p><img src="/images/JavaScript/memory-leak.jpg" alt=""></p>
+<p>点击图中蓝色柱线，会给我们展示这个时间段内存的分配，当蓝色柱线高时，代表分配的内存多，此时可能存在内存泄漏，可以去选择 Construtor 中的选项，然后在Object栏中查看更多详情，可以找出与某些变量相关联的引用。相应的就可以找出哪些变量存在内存泄漏。</p>
+<h3 id="内存泄漏的识别方法"><a href="#内存泄漏的识别方法" class="headerlink" title="内存泄漏的识别方法"></a>内存泄漏的识别方法</h3><p>浏览器识别（chrome为例子）：</p>
+<ul>
+<li>打开开发者工具，选择Performance；</li>
+<li>点击左上角的录制按钮；</li>
+<li>在页面上进行各种操作，模拟用户的使用情况</li>
+<li>一段时间后，点击左上角的 stop 按钮，勾选左上角的Memory，面板上就会显示这段时间的内存占用情况；</li>
+</ul>
+<p>如果内存占用基本平稳，接近水平，就说明不存在内存泄漏。 反之，就是内存泄漏了。</p>
+<h3 id="优化内存"><a href="#优化内存" class="headerlink" title="优化内存"></a>优化内存</h3><ul>
+<li>对于已经使用的或者不需要的数据，应该将其值设为 null，这称之为”解除引用”。需要注意的是，解除一个值的引用不代表垃圾回收器会立即将这段内存回收，这样做的目的是让垃圾回收器在下一个回收周期到来时知道这段内存需要回收；</li>
+<li>避免创建新的对象，尽量重用已创建好的对象；</li>
+<li>清空数组时，我们通常做法是 array = []，但这种做法其实是新建了一个新的数组然后将原来的数组当作内存垃圾。建议的做法是 array.length = 0，这样做不仅可以重用原来的变量，而且还避免创建了新的数组。</li>
+</ul>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2019/06/30/JavaScript/JavaScript%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B%E8%AF%A6%E8%A7%A3/" rel="prev" title="JavaScript数据类型详解">
+      <i class="fa fa-chevron-left"></i> JavaScript数据类型详解
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let activeClass = CONFIG.comments.activeClass;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#导读"><span class="nav-number">1.</span> <span class="nav-text">导读</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#内存模型"><span class="nav-number">2.</span> <span class="nav-text">内存模型</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#原始类型与栈内存"><span class="nav-number">2.1.</span> <span class="nav-text">原始类型与栈内存</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#引用类型与堆内存"><span class="nav-number">2.2.</span> <span class="nav-text">引用类型与堆内存</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#内存生命周期"><span class="nav-number">3.</span> <span class="nav-text">内存生命周期</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#垃圾回收机制"><span class="nav-number">4.</span> <span class="nav-text">垃圾回收机制</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#标记-清除（mark-and-sweep）"><span class="nav-number">4.1.</span> <span class="nav-text">标记-清除（mark and sweep）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#引用计数（reference-counting）"><span class="nav-number">4.2.</span> <span class="nav-text">引用计数（reference counting）</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#内存泄漏"><span class="nav-number">5.</span> <span class="nav-text">内存泄漏</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#内存泄漏的常见场景"><span class="nav-number">5.1.</span> <span class="nav-text">内存泄漏的常见场景</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#内存泄漏的识别方法"><span class="nav-number">5.2.</span> <span class="nav-text">内存泄漏的识别方法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#优化内存"><span class="nav-number">5.3.</span> <span class="nav-text">优化内存</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="zed"
+      src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">zed</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">2</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/CBCzed" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;CBCzed" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">zed</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v4.2.0
+  </div>
+  <span class="post-meta-divider">|</span>
+  <div class="theme-info">主题 – <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> v7.7.0
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>
