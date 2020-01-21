@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    hostname: new URL('http://yoursite.com').hostname,
+    root: '/',
+    scheme: 'Gemini',
+    version: '7.7.0',
+    exturl: false,
+    sidebar: {"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},
+    copycode: {"enable":false,"show_result":false,"style":null},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":false},
+    bookmark: {"enable":false,"color":"#222","save":"auto"},
+    fancybox: false,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    comments: {"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},
+    algolia: {
+      appID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: '',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}
+  };
+</script>
+
+  <meta name="description" content="导读JavaScript 常被描述为一种基于原型的语言；那什么是原型呢？原型是 JavaScript 中一个比较难理解的概念，原型相关的属性也比较多；当初自己学习时也是一头雾水，但却是进阶 JavaScript 必不可少的一步；像继承、设计模式等都涉及到原型的相关知识；希望你通过阅读本文，可以让你对原型及原型的设计有所认识。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="JavaScript原型及原型设计模式">
+<meta property="og:url" content="http://yoursite.com/2019/08/16/JavaScript/JavaScript%E5%8E%9F%E5%9E%8B%E5%8F%8A%E5%8E%9F%E5%9E%8B%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/index.html">
+<meta property="og:site_name" content="Zed">
+<meta property="og:description" content="导读JavaScript 常被描述为一种基于原型的语言；那什么是原型呢？原型是 JavaScript 中一个比较难理解的概念，原型相关的属性也比较多；当初自己学习时也是一头雾水，但却是进阶 JavaScript 必不可少的一步；像继承、设计模式等都涉及到原型的相关知识；希望你通过阅读本文，可以让你对原型及原型的设计有所认识。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://yoursite.com/images/JavaScript/prototype-chain.jpg">
+<meta property="article:published_time" content="2019-08-16T01:37:39.000Z">
+<meta property="article:modified_time" content="2020-01-21T03:22:38.215Z">
+<meta property="article:author" content="zed">
+<meta property="article:tag" content="JavaScript">
+<meta property="article:tag" content="博客">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://yoursite.com/images/JavaScript/prototype-chain.jpg">
+
+<link rel="canonical" href="http://yoursite.com/2019/08/16/JavaScript/JavaScript%E5%8E%9F%E5%9E%8B%E5%8F%8A%E5%8E%9F%E5%9E%8B%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true
+  };
+</script>
+
+  <title>JavaScript原型及原型设计模式 | Zed</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Zed</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+  </div>
+
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
+
+  </li>
+  </ul>
+
+</nav>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/08/16/JavaScript/JavaScript%E5%8E%9F%E5%9E%8B%E5%8F%8A%E5%8E%9F%E5%9E%8B%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="zed">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Zed">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          JavaScript原型及原型设计模式
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2019-08-16 09:37:39" itemprop="dateCreated datePublished" datetime="2019-08-16T09:37:39+08:00">2019-08-16</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-01-21 11:22:38" itemprop="dateModified" datetime="2020-01-21T11:22:38+08:00">2020-01-21</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="导读"><a href="#导读" class="headerlink" title="导读"></a>导读</h2><p>JavaScript 常被描述为一种基于原型的语言；那什么是原型呢？原型是 JavaScript 中一个比较难理解的概念，原型相关的属性也比较多；当初自己学习时也是一头雾水，但却是进阶 JavaScript 必不可少的一步；像继承、设计模式等都涉及到原型的相关知识；希望你通过阅读本文，可以让你对原型及原型的设计有所认识。</p>
+<a id="more"></a>
+
+<h2 id="原型"><a href="#原型" class="headerlink" title="原型"></a>原型</h2><!--这边文章得原型描述得重新编写-->
+
+<p>每一个 JavaScript 对象( Null 除外)在创建的时候就会与之关联另一个对象，而”另一个对象”指的就是原型；函数中使用的是 prototype 属性与原型关联，普通的对象则使用<strong>proto</strong>属性与原型关联。<br>在JavaScript中可使用<span style="background: #ffebcc; color: #f90"> Object.getPrototypeOf(object) </span>来访问对象的原型。</p>
+<h3 id="原型对象"><a href="#原型对象" class="headerlink" title="原型对象"></a>原型对象</h3><p>在 JavaScript 中，新创建一个函数，都会有一个 prototype 属性，这个属性指向函数的原型对象 prototype；普通对象没有 prototype 属性，但有<strong>proto</strong>属性。原型对象的用途是为每个实例对象存储共享的方法和属性，所以在原型上定义的属性和方法都会被其实例所共享。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Person</span>(<span class="params">name</span>)</span>&#123;</span><br><span class="line">    <span class="keyword">this</span>.name = name</span><br><span class="line">&#125;;</span><br><span class="line">Person.prototype.age = <span class="number">18</span></span><br><span class="line">Person.prototype.getName = <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123; <span class="comment">// 通过Person.prototype设置函数对象属性</span></span><br><span class="line">  <span class="keyword">return</span> <span class="keyword">this</span>.name</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">let</span> person1 = <span class="keyword">new</span> Person(<span class="string">'zed'</span>)</span><br><span class="line">person1.age <span class="comment">// 18</span></span><br><span class="line">person1.getName() <span class="comment">// zed﻿</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> person2 = <span class="keyword">new</span> Person(<span class="string">'ada'</span>)</span><br><span class="line">person2.age = <span class="number">18</span></span><br><span class="line">person1.getName() <span class="comment">// ada</span></span><br></pre></td></tr></table></figure>
+<p>person1 与 person2 都是构造函数 Person 创建出来的实例（对象），实例有一个内部指针<strong>proto</strong>指向会 Person 构造函数的原型 prototype；换句话说，实例与 Person 构造函数没有直接的关系，而是与构造函数的原型，即 Person.prototype 建立起了连接。通过实例可以访问原型中的属性，但是并不能从实例重写原型的值。</p>
+<h3 id="原型规则"><a href="#原型规则" class="headerlink" title="原型规则"></a>原型规则</h3><ul>
+<li>所有的引用类型（数组、对象、函数），都具有对象特征，即可自由扩展属性；</li>
+<li>所有的引用类型，都有一个<strong>proto</strong> 属性（隐式原型），属性值是一个普通对象；</li>
+<li>所有函数，都具有一个 prototype（显示原型），属性值也是一个普通原型；</li>
+<li>所有的引用类型（数组、对象、函数），其隐式原型指向其构造函数的显式原型；（obj.__proto__ === Object.prototype）；</li>
+<li>获取对象的某个属性时，若这个对象本身没有这个属性，那么会去它的<strong>proto</strong>（即它的构造函数的 prototype）中去寻找，直至查找到 Object.prototype 的原型 null；</li>
+</ul>
+<h3 id="原型链"><a href="#原型链" class="headerlink" title="原型链"></a>原型链</h3><p>每个对象拥有一个原型对象，通过<strong>proto</strong>指针指向上一个原型 ，并从中继承方法和属性，同时原型对象也可能拥有原型，一层一层递进，最终指向 Object.prototype 的原型对象 null。这种关系被称为<strong>原型链</strong> (prototype chain)<br><img src="/images/JavaScript/prototype-chain.jpg" alt=""></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Person</span> (<span class="params">name, age</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">this</span>.name = name</span><br><span class="line">  <span class="keyword">this</span>.age = age</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> person1 = <span class="keyword">new</span> Person(<span class="string">'zed'</span>, <span class="number">18</span>)</span><br></pre></td></tr></table></figure>
+<p>person1 从构造函数创建出来，其原型对象指向了 Person.prototype，而 Person构造函数属于对象，其原型指向 Object.prototype，最终 Object.prototype 的原型指向 null。</p>
+<h2 id="设计模式"><a href="#设计模式" class="headerlink" title="设计模式"></a>设计模式</h2><p>设计模式是一套被反复使用，思想成熟，经过分类和无数实战设计经验的总结。使用设计模式是为了让系统代码可重用，可扩展，可解耦，更容易被人理解且能保证代码可靠性。设计模式使代码开发真正工程化。</p>
+<h3 id="六大设计原则"><a href="#六大设计原则" class="headerlink" title="六大设计原则"></a>六大设计原则</h3><p>设计模式并不是根据想法随意设计，而是遵循以下规则，才能设计出让人容易理解的代码：</p>
+<ul>
+<li>单一职责原则：一个方法只做一件事，一个类只做一个功能；</li>
+<li>里氏替换原则：子类可以扩展父类的功能，但不能改变父类原有的功能；</li>
+<li>依赖倒置原则：只依赖接口不依赖方法，不关心底层的实现方法；</li>
+<li>接口分离原则：把大的接口拆分成小的接口，即功能单一接口；</li>
+<li>迪米特原则：函数中传入的参数越少越好，降低耦合度；</li>
+<li>开闭原则：面向扩展开放，面向修改关闭，可扩展；</li>
+</ul>
+<h3 id="常用设计模式"><a href="#常用设计模式" class="headerlink" title="常用设计模式"></a>常用设计模式</h3><h4 id="工厂模式"><a href="#工厂模式" class="headerlink" title="工厂模式"></a>工厂模式</h4><p>工厂模式是将其成员对象的实例化推迟到子类中，子类可以重写父类接口方法以便创建时指定独自的对象类型。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 工厂构造函数</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Factory</span> (<span class="params">name</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">this</span>.name = name</span><br><span class="line">  <span class="keyword">this</span>.sayName = <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">this</span>.name</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">Factory.prototype = &#123;</span><br><span class="line">  <span class="keyword">constructor</span>: Factory,</span><br><span class="line">  createFactory: function () &#123;</span><br><span class="line">    <span class="keyword">throw</span> <span class="keyword">new</span> <span class="built_in">Error</span>(<span class="string">'父类是抽象类无法直接调用，需要子类重写'</span>)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 原型继承</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">extendFactory</span> (<span class="params">subType, supType</span>) </span>&#123;</span><br><span class="line">  <span class="comment">// 缓存类</span></span><br><span class="line">  <span class="keyword">let</span> F = <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;&#125; <span class="comment">// 缓存类的原型指向父类原型</span></span><br><span class="line">  F.prototype = supType.prototype</span><br><span class="line">  <span class="comment">// 子类原型继承</span></span><br><span class="line">  subType.prototype = <span class="keyword">new</span> F()</span><br><span class="line">  <span class="comment">// 将constructor指向子类﻿</span></span><br><span class="line">  subType.constructor = subType</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Person</span>(<span class="params">name</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">this</span>.name = name</span><br><span class="line">&#125;</span><br><span class="line">extendFactory(Person, Factory)</span><br><span class="line">Person.prototype.createFactory = <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">  <span class="keyword">switch</span>(<span class="keyword">this</span>.name)&#123;</span><br><span class="line">    <span class="keyword">case</span> <span class="string">'Zed'</span>: <span class="keyword">return</span> &#123; <span class="attr">name</span>: <span class="string">'Zed'</span>, <span class="attr">age</span>: <span class="number">18</span>, <span class="attr">sex</span>: <span class="string">'male'</span>&#125;;</span><br><span class="line">    <span class="keyword">case</span> <span class="string">'Ada'</span>: <span class="keyword">return</span> &#123; <span class="attr">name</span>: <span class="string">'Ada'</span>, <span class="attr">age</span>: <span class="number">20</span>, <span class="attr">sex</span>: <span class="string">'female'</span>&#125;;</span><br><span class="line">    <span class="keyword">default</span> : <span class="keyword">return</span> &#123;&#125;;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> person = <span class="keyword">new</span> Person(<span class="string">'Zed'</span>)</span><br><span class="line"><span class="keyword">const</span> personInfo = person.createFactory()</span><br><span class="line"><span class="built_in">console</span>.log(personInfo) <span class="comment">// &#123; name: 'Zed', age: 18, sex: 'male'&#125;</span></span><br></pre></td></tr></table></figure>
+<p>抽象的工厂函数，可以将公共的方法写在函数上，而个性化的操作则可以在子类中实现。且外部不许关心内部构造器是怎么生成的，只需调用一个工厂方法生成一个实例即可；</p>
+<p>工厂模式适用场景：</p>
+<ul>
+<li>对象的构建十分复杂；</li>
+<li>需要依赖具体环境创建不同实例；</li>
+<li>处理大量具有相同属性的小对象；</li>
+</ul>
+<h4 id="单例模式"><a href="#单例模式" class="headerlink" title="单例模式"></a>单例模式</h4><p>单例模式也称单体模式，是一个用来划分命名空间并将一批属性和方法组织在一起的对象；提供了一种将代码组织为一个逻辑单元的手段，这个逻辑单元中的代码可以通过单一变量进行访问。<br>单例模式的常用方式是使用<strong>命名空间(namespace)</strong>，直接使用对象字面量来创建：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> Singleton = &#123;</span><br><span class="line">  name: <span class="string">'zed'</span>,</span><br><span class="line">  age: <span class="number">18</span>,</span><br><span class="line">  sayName() &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">this</span>.name</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>有时候，我们并不需要立即创建单例，而是在需要时才创建，这种单例模式称之为惰性单例:</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> LazySingle = <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">const</span> privateVariable = <span class="string">'something private'</span></span><br><span class="line">  <span class="function"><span class="keyword">function</span> <span class="title">showPrivate</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(privateVariable)</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">/* 公有变量和方法（可以访问私有变量和方法） */</span><span class="keyword">return</span> &#123;</span><br><span class="line">    publicMethod: <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">        showPrivate()</span><br><span class="line">    &#125;,</span><br><span class="line">    publicVar: <span class="string">'the public can see this!'</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> single = LazySingle()</span><br><span class="line">single.publicMethod() <span class="comment">// something private</span></span><br></pre></td></tr></table></figure>
+<p>单例模式可以用来划分命名空间，减少全局变量的数量，使得代码有组织，提高可读行及维护。</p>
+<h4 id="策略模式"><a href="#策略模式" class="headerlink" title="策略模式"></a>策略模式</h4><p>策略模式是将定义的一组算法封装起来，使其相互之间可以替换。封装的算法就有一定的独立性，不会随客户端的变化而变化。<br>策略模式中的算法其实都是在做同一件事，只是因为业务的不同，所以具体的实现不太一样。常见的策略模式有表单验证、商品促销等，以下举例表单验证：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> ValidateStrategy = <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="keyword">let</span> validation = &#123;</span><br><span class="line">      notNull: <span class="function"><span class="keyword">function</span> (<span class="params">value</span>) </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="regexp">/\s+/</span>.test(value) ? <span class="string">'请输入内容'</span> : <span class="string">''</span></span><br><span class="line">      &#125;,</span><br><span class="line">      isNumber: <span class="function"><span class="keyword">function</span> (<span class="params">value</span>) </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="regexp">/^[0-9]+(\.[0-9]+)?$/</span>.test(value) ? value : <span class="string">'请输入数字'</span></span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="function"><span class="keyword">function</span> (<span class="params">type, value</span>) </span>&#123;</span><br><span class="line">      <span class="keyword">return</span> validation[type] ? validation[type](value) : <span class="string">'没有该类型检测的方法'</span></span><br><span class="line">    &#125;</span><br><span class="line">  &#125;();</span><br><span class="line"><span class="keyword">const</span> form = ValidateStrategy(<span class="string">'isNumber'</span>, <span class="number">123</span>)</span><br><span class="line"><span class="built_in">console</span>.log(form) <span class="comment">// 123</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="中介者模式"><a href="#中介者模式" class="headerlink" title="中介者模式"></a>中介者模式</h4><p>中介者模式（Mediator），用一个中介对象来封装一系列的对象交互。中介者使各对象不需要显式地相互引用，从而使其耦合松散，而且可以独立地改变它们之间的交互。</p>
+<p>以《JavaScript设计模式》中最简单的中介者模式例子：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> Mediator = <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">let</span> _msg = &#123;&#125; <span class="comment">// 消息对象</span></span><br><span class="line">  <span class="keyword">return</span> &#123;</span><br><span class="line">    register: <span class="function">(<span class="params">type, action</span>) =&gt;</span> &#123;</span><br><span class="line">      <span class="comment">/*</span></span><br><span class="line"><span class="comment">      * 订阅消息的方法</span></span><br><span class="line"><span class="comment">      * 参数type  消息名称</span></span><br><span class="line"><span class="comment">      * 参数action 消息回调函数</span></span><br><span class="line"><span class="comment">      * */</span></span><br><span class="line">      <span class="keyword">if</span> (_msg[type]) &#123;</span><br><span class="line">        _msg[type].push(action)</span><br><span class="line">      &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        _msg[type] = [action]</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;,</span><br><span class="line">    send: <span class="function"><span class="params">type</span> =&gt;</span> &#123;</span><br><span class="line">      <span class="comment">/*</span></span><br><span class="line"><span class="comment">      * 发布消息的方法</span></span><br><span class="line"><span class="comment">      * 参数type  消息名称</span></span><br><span class="line"><span class="comment">      * */</span></span><br><span class="line">      <span class="keyword">if</span> (_msg[type]) &#123;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">let</span> item <span class="keyword">of</span> _msg[type]) &#123;</span><br><span class="line">          item &amp;&amp; item()</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;()</span><br><span class="line">Mediator.register(<span class="string">'demo'</span>, () =&gt; &#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">'first'</span>)</span><br><span class="line">&#125;)</span><br><span class="line">Mediator.register(<span class="string">'demo'</span>, () =&gt; &#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">'second'</span>)</span><br><span class="line">&#125;)</span><br><span class="line">Mediator.send(<span class="string">'demo'</span>) <span class="comment">// first second</span></span><br></pre></td></tr></table></figure>
+<p>MVC 模式使用的就是中介者模式，Model(模型层)、View(视图层)、Controller(控制层)；控制层就是一个中介者，协调模型与视图之间数据交流；解耦了模型与视图之间的依赖。</p>
+<h4 id="观察者模式"><a href="#观察者模式" class="headerlink" title="观察者模式"></a>观察者模式</h4><p>观察者模式也称发布订阅模式，是对象间的一种一对多的关系，让多个观察者对象同时监听某一个主题对象，当一个对象发生改变时，所有依赖于它的对象都将得到通知并自动更新，解决了主体对象与观察者之间功能的耦合。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> Observer = (<span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">let</span> _message = &#123;&#125;</span><br><span class="line">  <span class="keyword">return</span> &#123;</span><br><span class="line">    <span class="comment">// 注册信息（事件）接口</span></span><br><span class="line">    regist: <span class="function"><span class="keyword">function</span> (<span class="params">type, fn</span>) </span>&#123;</span><br><span class="line">      <span class="comment">/**</span></span><br><span class="line"><span class="comment">       * type 消息类型</span></span><br><span class="line"><span class="comment">       * fn 该消息类型对应的处理动作﻿</span></span><br><span class="line"><span class="comment">       *﻿*/</span></span><br><span class="line">      <span class="keyword">if</span> (!_message[type]) &#123;</span><br><span class="line">        _message[type] = [fn]</span><br><span class="line">      &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        _message[type].push(fn)</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="comment">// 发布信息接口</span></span><br><span class="line">    pub: <span class="function"><span class="keyword">function</span>(<span class="params">type, args</span>) </span>&#123;</span><br><span class="line">      <span class="comment">/**</span></span><br><span class="line"><span class="comment">       * type 消息类型</span></span><br><span class="line"><span class="comment">       * args 动作执行时所需传递的参数﻿</span></span><br><span class="line"><span class="comment">       *﻿*/</span></span><br><span class="line">      <span class="keyword">if</span> (!_message[type]) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">'该消息类型不存在'</span></span><br><span class="line">      &#125;</span><br><span class="line">      <span class="keyword">let</span> events = &#123;</span><br><span class="line">       type,</span><br><span class="line">       args: args || &#123;&#125;</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="keyword">for</span> (<span class="keyword">let</span> i = _message[type].length - <span class="number">1</span>; i === <span class="number">0</span>; i--) &#123;</span><br><span class="line">        _message[type][i].call(<span class="keyword">this</span>, events)</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="comment">// 移除信息接口</span></span><br><span class="line">    remove: <span class="function"><span class="keyword">function</span> (<span class="params">type, fn</span>) </span>&#123;</span><br><span class="line">      <span class="keyword">if</span> (_message[type] &amp;&amp; _message[type].length &gt; <span class="number">0</span>) &#123;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">let</span> i = _message[type].length - <span class="number">1</span>; i === <span class="number">0</span>; i--) &#123;</span><br><span class="line">          _message[type][i] === fn &amp;&amp; _message[type].splice(i, <span class="number">1</span>)</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;)()</span><br><span class="line">Observer.regist(<span class="string">'test'</span>, (e) =&gt; &#123;</span><br><span class="line">  <span class="built_in">console</span>.log(e.type, e.args.msg)</span><br><span class="line">&#125;)</span><br><span class="line">Observer.pub(<span class="string">'test'</span>, &#123;<span class="attr">msg</span>: <span class="string">'消息'</span>&#125;) <span class="comment">// test 消息</span></span><br></pre></td></tr></table></figure>
+<p>以上为简单的观察者，regist 为注册消息方法的作用是将订阅者注册的消息推入到消息队列中，pub 为发布消息，其功能就是当观察者发布一个消息是将所有订阅者订阅的消息依次执行，remove 为移除消息方法，其功能就是讲订阅者注销的消息从消息队列中清除。</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2019/07/15/JavaScript/JavaScript%E5%86%85%E5%AD%98%E8%AF%A6%E8%A7%A3/" rel="prev" title="JavaScript内存详解">
+      <i class="fa fa-chevron-left"></i> JavaScript内存详解
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let activeClass = CONFIG.comments.activeClass;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#导读"><span class="nav-number">1.</span> <span class="nav-text">导读</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#原型"><span class="nav-number">2.</span> <span class="nav-text">原型</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#原型对象"><span class="nav-number">2.1.</span> <span class="nav-text">原型对象</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#原型规则"><span class="nav-number">2.2.</span> <span class="nav-text">原型规则</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#原型链"><span class="nav-number">2.3.</span> <span class="nav-text">原型链</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#设计模式"><span class="nav-number">3.</span> <span class="nav-text">设计模式</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#六大设计原则"><span class="nav-number">3.1.</span> <span class="nav-text">六大设计原则</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#常用设计模式"><span class="nav-number">3.2.</span> <span class="nav-text">常用设计模式</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#工厂模式"><span class="nav-number">3.2.1.</span> <span class="nav-text">工厂模式</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#单例模式"><span class="nav-number">3.2.2.</span> <span class="nav-text">单例模式</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#策略模式"><span class="nav-number">3.2.3.</span> <span class="nav-text">策略模式</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#中介者模式"><span class="nav-number">3.2.4.</span> <span class="nav-text">中介者模式</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#观察者模式"><span class="nav-number">3.2.5.</span> <span class="nav-text">观察者模式</span></a></li></ol></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="zed"
+      src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">zed</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">3</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/CBCzed" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;CBCzed" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">zed</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v4.2.0
+  </div>
+  <span class="post-meta-divider">|</span>
+  <div class="theme-info">主题 – <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> v7.7.0
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>
