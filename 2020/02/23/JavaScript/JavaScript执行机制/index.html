@@ -49,21 +49,21 @@
   <meta name="description" content="导读从一诞生起，JavaScript就是一门单线程的语言；因为从其的用途来看，作为浏览器的脚本语言，JavaScript的主要用途是与用户交互，以及操作DOM，这就决定了其是单线程的，否则就会代理复杂的问题，比如，假定JavaScript同时有两个线程，一个线程在某个 DOM 节点上添加内容，另一个线程删除了这个节点，这时浏览器应该以哪个线程为准呢？单线程的理解是一行一行的执行代码，那 JavaS">
 <meta property="og:type" content="article">
 <meta property="og:title" content="JavaScript执行机制">
-<meta property="og:url" content="http://yoursite.com/2020/02/24/JavaScript/JavaScript%E6%89%A7%E8%A1%8C%E6%9C%BA%E5%88%B6/index.html">
+<meta property="og:url" content="http://yoursite.com/2020/02/23/JavaScript/JavaScript%E6%89%A7%E8%A1%8C%E6%9C%BA%E5%88%B6/index.html">
 <meta property="og:site_name" content="Zed">
 <meta property="og:description" content="导读从一诞生起，JavaScript就是一门单线程的语言；因为从其的用途来看，作为浏览器的脚本语言，JavaScript的主要用途是与用户交互，以及操作DOM，这就决定了其是单线程的，否则就会代理复杂的问题，比如，假定JavaScript同时有两个线程，一个线程在某个 DOM 节点上添加内容，另一个线程删除了这个节点，这时浏览器应该以哪个线程为准呢？单线程的理解是一行一行的执行代码，那 JavaS">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="http://yoursite.com/images/JavaScript/eventloop.jpg">
 <meta property="og:image" content="http://yoursite.com/images/JavaScript/event_loop_task_microtask.jpg">
-<meta property="article:published_time" content="2020-02-24T07:39:09.000Z">
-<meta property="article:modified_time" content="2020-02-24T13:55:01.892Z">
+<meta property="article:published_time" content="2020-02-23T07:39:09.000Z">
+<meta property="article:modified_time" content="2020-02-25T03:03:08.786Z">
 <meta property="article:author" content="zed">
 <meta property="article:tag" content="JavaScript">
 <meta property="article:tag" content="博客">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="http://yoursite.com/images/JavaScript/eventloop.jpg">
 
-<link rel="canonical" href="http://yoursite.com/2020/02/24/JavaScript/JavaScript%E6%89%A7%E8%A1%8C%E6%9C%BA%E5%88%B6/">
+<link rel="canonical" href="http://yoursite.com/2020/02/23/JavaScript/JavaScript%E6%89%A7%E8%A1%8C%E6%9C%BA%E5%88%B6/">
 
 
 <script id="page-configurations">
@@ -174,7 +174,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/02/24/JavaScript/JavaScript%E6%89%A7%E8%A1%8C%E6%9C%BA%E5%88%B6/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/02/23/JavaScript/JavaScript%E6%89%A7%E8%A1%8C%E6%9C%BA%E5%88%B6/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.jpg">
@@ -196,10 +196,16 @@
                 <i class="fa fa-calendar-o"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
-              
 
-              <time title="创建时间：2020-02-24 15:39:09 / 修改时间：21:55:01" itemprop="dateCreated datePublished" datetime="2020-02-24T15:39:09+08:00">2020-02-24</time>
+              <time title="创建时间：2020-02-23 15:39:09" itemprop="dateCreated datePublished" datetime="2020-02-23T15:39:09+08:00">2020-02-23</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-02-25 11:03:08" itemprop="dateModified" datetime="2020-02-25T11:03:08+08:00">2020-02-25</time>
+              </span>
 
           
 
@@ -241,8 +247,8 @@
 </ul>
 <p>JavaScript 任务除了广义上的同步与异步，还有更为精细的定义，为<strong>宏任务(task)</strong>与<strong>微任务(micro-task)</strong></p>
 <ul>
-<li>宏任务：严格按照时间顺序压栈和执行的，所以浏览器能够使得 JavaScript 内部任务与 DOM 任务能够有序的执行。当一个 task 执行结束后，在下一个 task 执行开始前，浏览器可以对页面进行重新渲染；宏任务包括整体代码<span style="background: #fff5f5; color: #ff502c"> script </span>、<span style="background: #fff5f5; color: #ff502c"> setTimeout </span>、<span style="background: #fff5f5; color: #ff502c"> setInterval </span>、<span style="background: #fff5f5; color: #ff502c"> requestAnimationFrame </span>、<span style="background: #fff5f5; color: #ff502c"> I/O </span>、<span style="background: #fff5f5; color: #ff502c"> UI rendering (浏览器) </span>；</li>
-<li>微任务：通常来说就是需要在当前 task 执行结束后立即执行的任务。例如需要对一系列的任务做出回应，或者是需要异步的执行任务而又不需要分配一个新的 task，这样便可以减小一点性能的开销。microtask 任务队列是一个与 task 任务队列相互独立的队列，microtask 任务将会在每一个 task 任务执行结束之后执行。每一个 task 中产生的 microtask 都将会添加到 microtask 队列中，microtask 中产生的 microtask 将会添加至当前队列的尾部，并且 microtask 会按序的处理完队列中的所有任务。微任务类型有<span style="background: #fff5f5; color: #ff502c"> Promise.then() </span>、<span style="background: #fff5f5; color: #ff502c"> catch </span>、<span style="background: #fff5f5; color: #ff502c"> finally </span>、<span style="background: #fff5f5; color: #ff502c"> MutationObserver </span><blockquote>
+<li>宏任务：严格按照时间顺序压栈和执行的，所以浏览器能够使得 JavaScript 内部任务与 DOM 任务能够有序的执行。当一个 task 执行结束后，在下一个 task 执行开始前，浏览器可以对页面进行重新渲染；宏任务包括整体代码<span style="background: #fff5f5; color: #ff502c"> script </span>、<span style="background: #fff5f5; color: #ff502c"> setTimeout </span>、<span style="background: #fff5f5; color: #ff502c"> setInterval </span>、<span style="background: #fff5f5; color: #ff502c"> requestAnimationFrame </span>、<span style="background: #fff5f5; color: #ff502c"> I/O </span>、<span style="background: #fff5f5; color: #ff502c"> UI rendering (浏览器) </span>、<span style="background: #fff5f5; color: #ff502c"> setImmediate(node) </span>；</li>
+<li>微任务：通常来说就是需要在当前 task 执行结束后立即执行的任务。例如需要对一系列的任务做出回应，或者是需要异步的执行任务而又不需要分配一个新的 task，这样便可以减小一点性能的开销。microtask 任务队列是一个与 task 任务队列相互独立的队列，microtask 任务将会在每一个 task 任务执行结束之后执行。每一个 task 中产生的 microtask 都将会添加到 microtask 队列中，microtask 中产生的 microtask 将会添加至当前队列的尾部，并且 microtask 会按序的处理完队列中的所有任务。微任务类型有<span style="background: #fff5f5; color: #ff502c"> Promise.then() </span>、<span style="background: #fff5f5; color: #ff502c"> Promise.catch() </span>、<span style="background: #fff5f5; color: #ff502c"> Promise.finally() </span>、<span style="background: #fff5f5; color: #ff502c"> MutationObserver </span>、<span style="background: #fff5f5; color: #ff502c"> process.nextTick(node) </span><blockquote>
 <p>要注意一点 Promise.then() 与 new Promise(() =&gt; {}).then() 是不同的，前一个是微任务，后一个 new Promise() 是同步任务，.then() 才是一个微任务。<br>microtask 任务队列是一个与 task 任务队列相互独立的队列，microtask 任务将会在每一个 task 任务执行结束之后执行。</p>
 </blockquote>
 </li>
@@ -253,7 +259,7 @@
 <img width=600 src="/images/JavaScript/event_loop_task_microtask.jpg"/>
 
 <p>接下来，我们看段代码：</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">console</span>.log(<span class="number">1</span>)</span><br><span class="line">setTimeout(<span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="number">2</span>)</span><br><span class="line">  <span class="keyword">new</span> <span class="built_in">Promise</span>(<span class="function">(<span class="params">resolve</span>) =&gt;</span> &#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="number">3</span>)</span><br><span class="line">    resolve()</span><br><span class="line">  &#125;).then(<span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">      <span class="built_in">console</span>.log(<span class="number">4</span>)</span><br><span class="line">  &#125;)</span><br><span class="line">&#125;)</span><br><span class="line"><span class="keyword">new</span> <span class="built_in">Promise</span>(<span class="function">(<span class="params">resolve</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="number">5</span>)</span><br><span class="line">  resolve()</span><br><span class="line">&#125;).then(<span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="number">6</span>)</span><br><span class="line">&#125;)</span><br><span class="line">setTimeout(<span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="number">7</span>)</span><br><span class="line">  <span class="keyword">new</span> <span class="built_in">Promise</span>(<span class="function">(<span class="params">resolve</span>) =&gt;</span> &#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="number">8</span>)</span><br><span class="line">    setTimeout(<span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">      <span class="built_in">console</span>.log(<span class="number">11</span>)</span><br><span class="line">    &#125;)</span><br><span class="line">    resolve()</span><br><span class="line">  &#125;).then(<span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">      <span class="built_in">console</span>.log(<span class="number">9</span>)</span><br><span class="line">  &#125;)</span><br><span class="line">&#125;)</span><br><span class="line"><span class="built_in">console</span>.log(<span class="number">10</span>)</span><br></pre></td></tr></table></figure>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">console</span>.log(<span class="number">1</span>)</span><br><span class="line">setTimeout(<span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="number">2</span>)</span><br><span class="line">  <span class="keyword">new</span> <span class="built_in">Promise</span>(<span class="function">(<span class="params">resolve</span>) =&gt;</span> &#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="number">3</span>)</span><br><span class="line">    setTimeout(<span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">      <span class="built_in">console</span>.log(<span class="number">11</span>)</span><br><span class="line">    &#125;)</span><br><span class="line">    resolve()</span><br><span class="line">  &#125;).then(<span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">      <span class="built_in">console</span>.log(<span class="number">4</span>)</span><br><span class="line">  &#125;)</span><br><span class="line">&#125;)</span><br><span class="line"><span class="keyword">new</span> <span class="built_in">Promise</span>(<span class="function">(<span class="params">resolve</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="number">5</span>)</span><br><span class="line">  resolve()</span><br><span class="line">&#125;).then(<span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="number">6</span>)</span><br><span class="line">&#125;)</span><br><span class="line">setTimeout(<span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="number">7</span>)</span><br><span class="line">  <span class="keyword">new</span> <span class="built_in">Promise</span>(<span class="function">(<span class="params">resolve</span>) =&gt;</span> &#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="number">8</span>)</span><br><span class="line">    setTimeout(<span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">      <span class="built_in">console</span>.log(<span class="number">12</span>)</span><br><span class="line">    &#125;)</span><br><span class="line">    resolve()</span><br><span class="line">  &#125;).then(<span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">      <span class="built_in">console</span>.log(<span class="number">9</span>)</span><br><span class="line">  &#125;)</span><br><span class="line">&#125;)</span><br><span class="line"><span class="built_in">console</span>.log(<span class="number">10</span>)</span><br></pre></td></tr></table></figure>
 <p>第一轮事件循环流程分析：</p>
 <ul>
 <li>首先，整体的 script 作为第一个宏任务进入主线程，遇到console.log(1),输出1；</li>
@@ -269,12 +275,14 @@
 <ul>
 <li>第二轮宏任务从 setTimeout1，直接输出2；</li>
 <li>遇到 new Promise() 构造函数，直接执行，输出3，其then函数被分发到微任务的 Event Queue 中，记为then2；</li>
+<li>遇到 setTimeout 其回调函数被分发到宏任务的 Event Queue 中, 记为 setTimeout3； </li>
 <li>第二轮事件循环宏任务执行完毕，输出2、3；紧接着执行微任务then2，输出4；</li>
 </ul>
-<p>第一轮事件循环完毕后，输出2、3、4。</p>
-<p>第三轮事件循环与第二轮没有太大区别，直接输出7、8、9，但在遇到 new Promise() 里面又有一个宏任务setTimeout，记为 setTimeout3</p>
+<p>第二轮事件循环完毕后，输出2、3、4。</p>
+<p>第三轮事件循环与第二轮没有太大区别，直接输出7、8、9，但在遇到 new Promise() 里面又有一个宏任务setTimeout，记为 setTimeout4</p>
 <p>第四轮事件循环，执行宏任务setTimeout3，直接输出11；</p>
-<p>整段代码，共执行了四次事件循环，完整的输出为1、5、10、6、2、3、4、7、8、9、11</p>
+<p>第五轮事件循环，执行宏任务setTimeout4，直接输出12；</p>
+<p>整段代码，共执行了五次事件循环，完整的输出为1、5、10、6、2、3、4、7、8、9、11、12</p>
 <p>事件循环即为JavaScript异步编程的实现方式，同时也是其执行的机制，所以牢记JavaScript执行机制，就能理解代码的执行了。</p>
 
     </div>
