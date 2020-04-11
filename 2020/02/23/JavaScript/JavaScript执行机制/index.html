@@ -56,7 +56,7 @@
 <meta property="og:image" content="http://yoursite.com/images/JavaScript/eventloop.jpg">
 <meta property="og:image" content="http://yoursite.com/images/JavaScript/event_loop_task_microtask.jpg">
 <meta property="article:published_time" content="2020-02-23T07:39:09.000Z">
-<meta property="article:modified_time" content="2020-02-28T02:51:01.013Z">
+<meta property="article:modified_time" content="2020-04-07T05:49:37.873Z">
 <meta property="article:author" content="zed">
 <meta property="article:tag" content="JavaScript">
 <meta property="article:tag" content="博客">
@@ -204,7 +204,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-02-28 10:51:01" itemprop="dateModified" datetime="2020-02-28T10:51:01+08:00">2020-02-28</time>
+                <time title="修改时间：2020-04-07 13:49:37" itemprop="dateModified" datetime="2020-04-07T13:49:37+08:00">2020-04-07</time>
               </span>
 
           
@@ -231,24 +231,24 @@
 
 <p>导图表达如下的意思：</p>
 <ul>
-<li>同步和异步任务分别进入不同的执行”场所”，同步的进入主线程，异步的进入<span style="background: #fff5f5; color: #ff502c"> Event Table </span>并注册函数</li>
-<li>当指定的事情完成时，<span style="background: #fff5f5; color: #ff502c"> Event Table </span>会将这个函数移入<span style="background: #fff5f5; color: #ff502c"> Event Queue </span>(任务队列)</li>
-<li>当主线程内的任务执行完毕为空，会去<span style="background: #fff5f5; color: #ff502c"> Event Queue </span>读取对应的回调函数，进入主线程执行</li>
+<li>同步和异步任务分别进入不同的执行”场所”，同步的进入主线程，异步的进入<span class="en-text"> Event Table </span>并注册函数</li>
+<li>当指定的事情完成时，<span class="en-text"> Event Table </span>会将这个函数移入<span class="en-text"> Event Queue </span>(任务队列)</li>
+<li>当主线程内的任务执行完毕为空，会去<span class="en-text"> Event Queue </span>读取对应的回调函数，进入主线程执行</li>
 <li>主线程不断重复上面的第三步，如此就形成了<strong>事件循环(Event Loop)</strong></li>
 </ul>
 <p>jQuery ajax为常见异步请求方法，如下：</p>
 <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">$.ajax(&#123;</span><br><span class="line">  url: <span class="string">'www.example.com'</span>,</span><br><span class="line">  data: &#123;&#125;,</span><br><span class="line">  success: <span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">'ajax success'</span>)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;)</span><br><span class="line"><span class="built_in">console</span>.log(<span class="string">'代码执行了'</span>)</span><br></pre></td></tr></table></figure>
-<p>如上是<span style="background: #fff5f5; color: #ff502c"> ajax </span>请求的代码，其执行过程：</p>
+<p>如上是<span class="en-text"> ajax </span>请求的代码，其执行过程：</p>
 <ul>
-<li>因为<span style="background: #fff5f5; color: #ff502c"> ajax </span>是异步任务，所以进入<span style="background: #fff5f5; color: #ff502c"> Event Table </span>注册回调函数<span style="background: #fff5f5; color: #ff502c"> success </span>；</li>
-<li>执行<span style="background: #fff5f5; color: #ff502c"> console.log(&#39;代码执行了&#39;) </span></li>
-<li><span style="background: #fff5f5; color: #ff502c"> ajax </span>事件完成，回调函数<span style="background: #fff5f5; color: #ff502c"> success </span>进入<span style="background: #fff5f5; color: #ff502c"> Event Queue </span>；</li>
-<li>主线程从<span style="background: #fff5f5; color: #ff502c"> Event Queue </span>读取回调函数<span style="background: #fff5f5; color: #ff502c"> success </span>并执行</li>
+<li>因为<span class="en-text"> ajax </span>是异步任务，所以进入<span class="en-text"> Event Table </span>注册回调函数<span class="en-text"> success </span>；</li>
+<li>执行<span class="en-text"> console.log(&#39;代码执行了&#39;) </span></li>
+<li><span class="en-text"> ajax </span>事件完成，回调函数<span class="en-text"> success </span>进入<span class="en-text"> Event Queue </span>；</li>
+<li>主线程从<span class="en-text"> Event Queue </span>读取回调函数<span class="en-text"> success </span>并执行</li>
 </ul>
 <p>JavaScript 任务除了广义上的同步与异步，还有更为精细的定义，为<strong>宏任务(task)</strong>与<strong>微任务(micro-task)</strong></p>
 <ul>
-<li>宏任务：严格按照时间顺序压栈和执行的，所以浏览器能够使得 JavaScript 内部任务与 DOM 任务能够有序的执行。当一个 task 执行结束后，在下一个 task 执行开始前，浏览器可以对页面进行重新渲染；宏任务包括整体代码<span style="background: #fff5f5; color: #ff502c"> script </span>、<span style="background: #fff5f5; color: #ff502c"> setTimeout </span>、<span style="background: #fff5f5; color: #ff502c"> setInterval </span>、<span style="background: #fff5f5; color: #ff502c"> requestAnimationFrame </span>、<span style="background: #fff5f5; color: #ff502c"> I/O </span>、<span style="background: #fff5f5; color: #ff502c"> UI rendering (浏览器) </span>、<span style="background: #fff5f5; color: #ff502c"> setImmediate(node) </span>；</li>
-<li>微任务：通常来说就是需要在当前 task 执行结束后立即执行的任务。例如需要对一系列的任务做出回应，或者是需要异步的执行任务而又不需要分配一个新的 task，这样便可以减小一点性能的开销。microtask 任务队列是一个与 task 任务队列相互独立的队列，microtask 任务将会在每一个 task 任务执行结束之后执行。每一个 task 中产生的 microtask 都将会添加到 microtask 队列中，microtask 中产生的 microtask 将会添加至当前队列的尾部，并且 microtask 会按序的处理完队列中的所有任务。微任务类型有<span style="background: #fff5f5; color: #ff502c"> Promise.then() </span>、<span style="background: #fff5f5; color: #ff502c"> Promise.catch() </span>、<span style="background: #fff5f5; color: #ff502c"> Promise.finally() </span>、<span style="background: #fff5f5; color: #ff502c"> MutationObserver </span>、<span style="background: #fff5f5; color: #ff502c"> process.nextTick(node) </span><blockquote>
+<li>宏任务：严格按照时间顺序压栈和执行的，所以浏览器能够使得 JavaScript 内部任务与 DOM 任务能够有序的执行。当一个 task 执行结束后，在下一个 task 执行开始前，浏览器可以对页面进行重新渲染；宏任务包括整体代码<span class="en-text"> script </span>、<span class="en-text"> setTimeout </span>、<span class="en-text"> setInterval </span>、<span class="en-text"> requestAnimationFrame </span>、<span class="en-text"> I/O </span>、<span class="en-text"> UI rendering (浏览器) </span>、<span class="en-text"> setImmediate(node) </span>；</li>
+<li>微任务：通常来说就是需要在当前 task 执行结束后立即执行的任务。例如需要对一系列的任务做出回应，或者是需要异步的执行任务而又不需要分配一个新的 task，这样便可以减小一点性能的开销。microtask 任务队列是一个与 task 任务队列相互独立的队列，microtask 任务将会在每一个 task 任务执行结束之后执行。每一个 task 中产生的 microtask 都将会添加到 microtask 队列中，microtask 中产生的 microtask 将会添加至当前队列的尾部，并且 microtask 会按序的处理完队列中的所有任务。微任务类型有<span class="en-text"> Promise.then() </span>、<span class="en-text"> Promise.catch() </span>、<span class="en-text"> Promise.finally() </span>、<span class="en-text"> MutationObserver </span>、<span class="en-text"> process.nextTick(node) </span><blockquote>
 <p>要注意 Promise.then() 与 new Promise(() =&gt; {}).then() 是不同的，前一个是微任务，后一个 new Promise() 是同步任务，.then() 才是一个微任务。<br>microtask 任务队列是一个与 task 任务队列相互独立的队列，microtask 任务将会在每一个 task 任务执行结束之后执行。</p>
 </blockquote>
 </li>
@@ -397,7 +397,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">8</span>
+          <span class="site-state-item-count">9</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
