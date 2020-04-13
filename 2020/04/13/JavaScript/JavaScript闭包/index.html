@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    hostname: new URL('http://yoursite.com').hostname,
+    root: '/',
+    scheme: 'Gemini',
+    version: '7.7.0',
+    exturl: false,
+    sidebar: {"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},
+    copycode: {"enable":false,"show_result":false,"style":null},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":false},
+    bookmark: {"enable":false,"color":"#222","save":"auto"},
+    fancybox: false,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    comments: {"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},
+    algolia: {
+      appID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: '',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}
+  };
+</script>
+
+  <meta name="description" content="导读JavaScript 中闭包无处不在，但很多时候不论是开发时还是在面试的时候，我们并未真正的理解什么是闭包，自己曾经去了解过闭包的相关定义，以为记住了概念就能理解，但实际上从未真正的理解过，每当别人询问起什么是闭包时，自己又陷入了沉思，所以自己专门写一篇闭包的知识来理解闭包的艺术，也希望可以帮助到你脱离似懂非懂的状态；当然在学习闭包之前，你需要对 JavaScript 的作用域有写概念，有助于">
+<meta property="og:type" content="article">
+<meta property="og:title" content="JavaScript闭包">
+<meta property="og:url" content="http://yoursite.com/2020/04/13/JavaScript/JavaScript%E9%97%AD%E5%8C%85/index.html">
+<meta property="og:site_name" content="JavaScript修炼">
+<meta property="og:description" content="导读JavaScript 中闭包无处不在，但很多时候不论是开发时还是在面试的时候，我们并未真正的理解什么是闭包，自己曾经去了解过闭包的相关定义，以为记住了概念就能理解，但实际上从未真正的理解过，每当别人询问起什么是闭包时，自己又陷入了沉思，所以自己专门写一篇闭包的知识来理解闭包的艺术，也希望可以帮助到你脱离似懂非懂的状态；当然在学习闭包之前，你需要对 JavaScript 的作用域有写概念，有助于">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2020-04-13T01:43:04.000Z">
+<meta property="article:modified_time" content="2020-04-13T12:57:39.424Z">
+<meta property="article:author" content="zed">
+<meta property="article:tag" content="JavaScript">
+<meta property="article:tag" content="博客">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://yoursite.com/2020/04/13/JavaScript/JavaScript%E9%97%AD%E5%8C%85/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true
+  };
+</script>
+
+  <title>JavaScript闭包 | JavaScript修炼</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">JavaScript修炼</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+  </div>
+
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
+
+  </li>
+  </ul>
+
+</nav>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/04/13/JavaScript/JavaScript%E9%97%AD%E5%8C%85/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="zed">
+      <meta itemprop="description" content="欲望提升热忱，毅力磨平高山">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="JavaScript修炼">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          JavaScript闭包
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2020-04-13 09:43:04 / 修改时间：20:57:39" itemprop="dateCreated datePublished" datetime="2020-04-13T09:43:04+08:00">2020-04-13</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="导读"><a href="#导读" class="headerlink" title="导读"></a>导读</h2><p>JavaScript 中闭包无处不在，但很多时候不论是开发时还是在面试的时候，我们并未真正的理解什么是闭包，自己曾经去了解过闭包的相关定义，以为记住了概念就能理解，但实际上从未真正的理解过，每当别人询问起什么是闭包时，自己又陷入了沉思，所以自己专门写一篇闭包的知识来理解闭包的艺术，也希望可以帮助到你脱离似懂非懂的状态；当然在学习闭包之前，你需要对 JavaScript 的作用域有写概念，有助于你更容易的理解闭包，若是不了解 JavaScript 的作用域，建议你先学习下，再学习闭包的知识，可以参考我的 <a href="https://cbczed.github.io/2019/11/10/JavaScript/JavaScript%E4%BD%9C%E7%94%A8%E5%9F%9F%E5%8F%8A%E6%89%A7%E8%A1%8C%E4%B8%8A%E4%B8%8B%E6%96%87%E6%A0%88/" target="_blank" rel="noopener">JavaScript作用域及执行上下文</a> 一文；接下来，我们一起来感受闭包的艺术吧！</p>
+<a id="more"></a>
+<h2 id="什么是闭包"><a href="#什么是闭包" class="headerlink" title="什么是闭包"></a>什么是闭包</h2><p>在了解闭包前，我们需要知道自由变量这个概念：</p>
+<h3 id="自由变量"><a href="#自由变量" class="headerlink" title="自由变量"></a>自由变量</h3><p>自由变量是指在函数中使用的，但既不是函数参数也不是函数的局部变量的变量。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> name = <span class="string">'global'</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">getName</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="built_in">console</span>.log(name)</span><br><span class="line">&#125;</span><br><span class="line">getName() <span class="comment">// global</span></span><br></pre></td></tr></table></figure>
+<p>如上代码，变量<span class="en-text"> name </span>在<span class="en-text"> getName </span>函数中被使用但却不是<span class="en-text"> getName </span>函数的局部变量，所以<span class="en-text"> name </span>就是自由变量。</p>
+<h3 id="闭包的定义"><a href="#闭包的定义" class="headerlink" title="闭包的定义"></a>闭包的定义</h3><p>网上的许多文章对闭包的概念说法都不同，</p>
+<p>MDN 对闭包的解释为：</p>
+<blockquote>
+<p>闭包可以让你从内部函数访问外部函数作用域</p>
+</blockquote>
+<p>《JavaScript权威指南》对闭包的解释：</p>
+<blockquote>
+<p>从技术的角度讲，所有的 JavaScript 函数都是闭包：它们都是对象，它们都关联到作用域链</p>
+</blockquote>
+<p>《你不知道的JavaScript（上卷）》对闭包的解释为：</p>
+<blockquote>
+<p>当函数可以记住并访问所在的词法作用域时，就产生了闭包，即使函数是在当前词法作用域之外执行</p>
+</blockquote>
+<p>我们直接看代码：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">checkscope</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">let</span> name = <span class="string">'local'</span></span><br><span class="line">  <span class="function"><span class="keyword">function</span> <span class="title">fn</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(name)</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> fn</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">let</span> foo = checkscope()</span><br><span class="line">foo() <span class="comment">// local</span></span><br></pre></td></tr></table></figure>
+<p>如上代码，就是一个闭包，满足了上面三种闭包的概念；</p>
+<ul>
+<li>函数<span class="en-text"> fn </span>的词法作用域能够访问函数<span class="en-text"> checkscope </span>的内部作用域，并将<span class="en-text"> fn </span>作为返回值返回；</li>
+<li><span class="en-text"> checkscope </span>执行后，赋值给了<span class="en-text"> foo </span>变量，但其实都是对函数<span class="en-text"> fn </span>的引用</li>
+<li>按照执行上下文栈的规则，在函数<span class="en-text"> checkscope </span>执行完后，其对应的作用域应该被销毁，若是在浏览器环境下，就会被 V8 引擎的垃圾回收机制给回收了</li>
+<li>然而闭包就可以阻止这种情况，因为<span class="en-text"> fn </span>函数在使用这个作用域，使得函数<span class="en-text"> checkscope </span>的作用域在执行完成后仍旧存在，因此没有被垃圾回收</li>
+</ul>
+<p>以上只是闭包实现的一种，其实实现闭包的方式有很多种，但无论通过何种手段将内部函数传递到所在的词法作用域以外，它都会<strong>保持对原始定义作用域的引用</strong>，无论在何处执行这个函数都会使用闭包。<br>总结起来，要产生闭包就是两个要素：</p>
+<ol>
+<li>要有自由变量，且该变量会被依赖；</li>
+<li>创建闭包的词法作用域看似销毁，实则会被继续保存，如上代码返回的 fn 函数；<br>而闭包的原理，其实就是第2点，即把闭包函数的作用域链保存了下来。</li>
+</ol>
+<h3 id="闭包的运用"><a href="#闭包的运用" class="headerlink" title="闭包的运用"></a>闭包的运用</h3><p>闭包的运用有很多，如：</p>
+<ul>
+<li>延迟运用</li>
+<li>函数防抖</li>
+<li>函数节流</li>
+<li>柯里化<br>这里就不一一举例了，我们就拿常见的延迟运用来说：<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 没有使用闭包</span></span><br><span class="line"><span class="keyword">for</span> (<span class="keyword">var</span> i = <span class="number">0</span>; i &lt; <span class="number">3</span>; i++) &#123;</span><br><span class="line">  setTimeout(<span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="built_in">console</span>.log(i) <span class="comment">// 全部打印出3</span></span><br><span class="line">  &#125;, <span class="number">1000</span>)</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 使用闭包</span></span><br><span class="line"><span class="keyword">for</span> (<span class="keyword">var</span> i = <span class="number">0</span>; i &lt; <span class="number">3</span>; i++) &#123;</span><br><span class="line">  (<span class="function"><span class="keyword">function</span>(<span class="params">i</span>) </span>&#123;</span><br><span class="line">    setTimeout(<span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">        <span class="built_in">console</span>.log(i) <span class="comment">//打印 0 1 2</span></span><br><span class="line">      &#125;, <span class="number">1000</span>)</span><br><span class="line">  &#125;)(i)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+以上没有使用闭包时，全部都打印 3，这是因为所有的定时器共用了同一个词法作用域里的变量，因为 i 变量是使用 var 声明的，所以当 for 执行执行完毕后，变量 i 的值变为了 3，一秒后定时器执行，所以全部打印 3。<br>总结起来说，闭包的用途就两个：</li>
+</ul>
+<ol>
+<li>访问函数内部的变量</li>
+<li>当变量始终保存在内存中不被垃圾回收机制给回收</li>
+</ol>
+<h3 id="闭包的缺点及改进"><a href="#闭包的缺点及改进" class="headerlink" title="闭包的缺点及改进"></a>闭包的缺点及改进</h3><ul>
+<li>因为闭包会是的词法作用域保留，使得变量一直存在内存当中，过多的使用会导致性能的下降且容易造成内存泄漏；所以尽可能在使用完毕后，删除变量，或是使用 ES6 的 let const 方式来声明变量。</li>
+<li>因为闭包会在父函数外部修改其内部变量的值，如将函数模拟成对象使用时，闭包作为公共方法，容易修改私有属性<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">foo</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">let</span> counter = <span class="number">0</span></span><br><span class="line">  <span class="function"><span class="keyword">function</span> <span class="title">addCounter</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">    counter++</span><br><span class="line">    <span class="built_in">console</span>.log(counter)</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> &#123;</span><br><span class="line">    add: addCounter</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">let</span> obj = foo()</span><br><span class="line">obj.add()</span><br></pre></td></tr></table></figure>
+如上代码，若 counter 作为私有属性，一定要注意 counter 属性是否可以被修改。</li>
+</ul>
+<h2 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h2><ul>
+<li><a href="https://juejin.im/post/5b081f8d6fb9a07a9b3664b6#heading-4" target="_blank" rel="noopener">闭包详解一</a></li>
+<li><a href="https://github.com/mqyqingfeng/Blog/issues/9" target="_blank" rel="noopener">JavaScript深入之闭包</a></li>
+</ul>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2020/04/06/JavaScript/JavaScript%E4%B9%8BPromise%E5%8E%9F%E7%90%86/" rel="prev" title="JavaScript之Promise原理">
+      <i class="fa fa-chevron-left"></i> JavaScript之Promise原理
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let activeClass = CONFIG.comments.activeClass;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#导读"><span class="nav-number">1.</span> <span class="nav-text">导读</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#什么是闭包"><span class="nav-number">2.</span> <span class="nav-text">什么是闭包</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#自由变量"><span class="nav-number">2.1.</span> <span class="nav-text">自由变量</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#闭包的定义"><span class="nav-number">2.2.</span> <span class="nav-text">闭包的定义</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#闭包的运用"><span class="nav-number">2.3.</span> <span class="nav-text">闭包的运用</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#闭包的缺点及改进"><span class="nav-number">2.4.</span> <span class="nav-text">闭包的缺点及改进</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考文献"><span class="nav-number">3.</span> <span class="nav-text">参考文献</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="zed"
+      src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">zed</p>
+  <div class="site-description" itemprop="description">欲望提升热忱，毅力磨平高山</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">10</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/CBCzed" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;CBCzed" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">zed</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v4.2.0
+  </div>
+  <span class="post-meta-divider">|</span>
+  <div class="theme-info">主题 – <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> v7.7.0
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>
