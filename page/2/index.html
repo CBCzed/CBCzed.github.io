@@ -49,7 +49,7 @@
   <meta name="description" content="欲望提升热忱，毅力磨平高山">
 <meta property="og:type" content="website">
 <meta property="og:title" content="JavaScript修炼">
-<meta property="og:url" content="http://yoursite.com/archives/2019/09/index.html">
+<meta property="og:url" content="http://yoursite.com/page/2/index.html">
 <meta property="og:site_name" content="JavaScript修炼">
 <meta property="og:description" content="欲望提升热忱，毅力磨平高山">
 <meta property="og:locale" content="zh_CN">
@@ -58,19 +58,19 @@
 <meta property="article:tag" content="博客">
 <meta name="twitter:card" content="summary">
 
-<link rel="canonical" href="http://yoursite.com/archives/2019/09/">
+<link rel="canonical" href="http://yoursite.com/page/2/">
 
 
 <script id="page-configurations">
   // https://hexo.io/docs/variables.html
   CONFIG.page = {
     sidebar: "",
-    isHome: false,
+    isHome: true,
     isPost: false
   };
 </script>
 
-  <title>归档 | JavaScript修炼</title>
+  <title>JavaScript修炼</title>
   
 
 
@@ -164,48 +164,96 @@
           <div class="content">
             
 
+  <div class="posts-expand">
+        
   
   
-  
-  <div class="post-block">
-    <div class="posts-collapse">
-      <div class="collection-title">
-        <span class="collection-header">嗯..! 目前共计 11 篇日志。 继续努力。</span>
-      </div>
+  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/06/30/JavaScript/JavaScript%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B%E8%AF%A6%E8%A7%A3/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="zed">
+      <meta itemprop="description" content="欲望提升热忱，毅力磨平高山">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="JavaScript修炼">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          
+            <a href="/2019/06/30/JavaScript/JavaScript%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B%E8%AF%A6%E8%A7%A3/" class="post-title-link" itemprop="url">JavaScript数据类型详解</a>
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2019-06-30 15:54:28" itemprop="dateCreated datePublished" datetime="2019-06-30T15:54:28+08:00">2019-06-30</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-04-27 22:00:44" itemprop="dateModified" datetime="2020-04-27T22:00:44+08:00">2020-04-27</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
 
       
-    <div class="collection-year">
-      <h1 class="collection-header">2019</h1>
+          <h2 id="导读"><a href="#导读" class="headerlink" title="导读"></a>导读</h2><p>学习 JavaScript 最先接触到的是变量和类型，在编写代码时，使用变量看似简单，但是往往看起来最简单的东西往往还隐藏着很多你不了解、或者容易犯错的知识，比如下面几个问题：</p>
+<ul>
+<li><span class="en-text"> null </span>与<span class="en-text"> undefined </span>的区别?</li>
+<li>如何精确的判断变量的类型？</li>
+<li><span class="en-text"> Symbol </span>类型在实际开发中的应用？</li>
+<li>是否理解值传递和引用传递？</li>
+<li>基本类型对应的内置对象，以及他们之间的装箱拆箱操作？</li>
+<li><span class="en-text"> [ ] == ![ ] </span>、<span class="en-text"> undefined == false </span>为什么等于<span class="en-text"> true </span>代码中何时会发生隐式类型转换？转换的规则是什么？</li>
+<li>JavaScript变量在内存种的具体存储形式？</li>
+<li>JavaScript内存周期、垃圾回收机制及内存泄漏情况？</li>
+</ul>
+<p>如果你还不能很好的解答上面的问题，那说明你还没有完全掌握这部分的知识，希望这边文章可以让你有所收获。</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2019/06/30/JavaScript/JavaScript%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B%E8%AF%A6%E8%A7%A3/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
     </div>
 
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <div class="post-meta">
-        <time itemprop="dateCreated"
-              datetime="2019-09-16T16:05:47+08:00"
-              content="2019-09-16">
-          09-16
-        </time>
-      </div>
-
-      <h2 class="post-title">
-          <a class="post-title-link" href="/2019/09/16/JavaScript/JavaScript%E7%BB%A7%E6%89%BF/" itemprop="url">
-            <span itemprop="name">JavaScript继承</span>
-          </a>
-      </h2>
-
-    </header>
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
   </article>
+  
+  
+  
 
-
-    </div>
   </div>
-  
-  
-  
 
   
+  <nav class="pagination">
+    <a class="extend prev" rel="prev" href="/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="page-number current">2</span>
+  </nav>
 
 
 
