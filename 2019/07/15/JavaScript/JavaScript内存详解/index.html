@@ -46,12 +46,12 @@
   };
 </script>
 
-  <meta name="description" content="导读你在编写代码时，是否有疑问过，编写的代码存储于哪里呢？JavaScript 是在创建变量（对象，字符串等）时自动进行了分配内存，并且在不使用它们时&quot;自动&quot;释放。 释放的过程称为垃圾回收；也许是这个&quot;自动&quot;的词语混淆了大家忽略了对内存的管理，然而，了解内存机制是我们进阶 JavaScript 的必然要求；因为很多相关知识的背后都会牵扯到内存管理，比如，浅拷">
+  <meta name="description" content="导读&amp;#12288;&amp;#12288;你在编写代码时，是否有疑问过，编写的代码存储于哪里呢？&amp;#12288;&amp;#12288;JavaScript 是在创建变量（对象，字符串等）时自动进行了分配内存，并且在不使用它们时&quot;自动&quot;释放。 释放的过程称为垃圾回收；也许是这个&quot;自动&quot;的词语混淆了大家忽略了对内存的管理，然而，了解内存机制是我们进阶 JavaScript">
 <meta property="og:type" content="article">
 <meta property="og:title" content="JavaScript内存详解">
 <meta property="og:url" content="http://yoursite.com/2019/07/15/JavaScript/JavaScript%E5%86%85%E5%AD%98%E8%AF%A6%E8%A7%A3/index.html">
 <meta property="og:site_name" content="JavaScript修炼">
-<meta property="og:description" content="导读你在编写代码时，是否有疑问过，编写的代码存储于哪里呢？JavaScript 是在创建变量（对象，字符串等）时自动进行了分配内存，并且在不使用它们时&quot;自动&quot;释放。 释放的过程称为垃圾回收；也许是这个&quot;自动&quot;的词语混淆了大家忽略了对内存的管理，然而，了解内存机制是我们进阶 JavaScript 的必然要求；因为很多相关知识的背后都会牵扯到内存管理，比如，浅拷">
+<meta property="og:description" content="导读&amp;#12288;&amp;#12288;你在编写代码时，是否有疑问过，编写的代码存储于哪里呢？&amp;#12288;&amp;#12288;JavaScript 是在创建变量（对象，字符串等）时自动进行了分配内存，并且在不使用它们时&quot;自动&quot;释放。 释放的过程称为垃圾回收；也许是这个&quot;自动&quot;的词语混淆了大家忽略了对内存的管理，然而，了解内存机制是我们进阶 JavaScript">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="http://yoursite.com/images/JavaScript/stack.jpg">
 <meta property="og:image" content="http://yoursite.com/images/JavaScript/heap.jpg">
@@ -59,7 +59,7 @@
 <meta property="og:image" content="http://yoursite.com/images/JavaScript/memory.jpg">
 <meta property="og:image" content="http://yoursite.com/images/JavaScript/memory-leak.jpg">
 <meta property="article:published_time" content="2019-07-15T03:51:11.000Z">
-<meta property="article:modified_time" content="2020-04-07T05:49:37.879Z">
+<meta property="article:modified_time" content="2020-05-17T02:13:32.228Z">
 <meta property="article:author" content="zed">
 <meta property="article:tag" content="JavaScript">
 <meta property="article:tag" content="博客">
@@ -207,7 +207,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-04-07 13:49:37" itemprop="dateModified" datetime="2020-04-07T13:49:37+08:00">2020-04-07</time>
+                <time title="修改时间：2020-05-17 10:13:32" itemprop="dateModified" datetime="2020-05-17T10:13:32+08:00">2020-05-17</time>
               </span>
 
           
@@ -228,7 +228,7 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <h2 id="导读"><a href="#导读" class="headerlink" title="导读"></a>导读</h2><p>你在编写代码时，是否有疑问过，编写的代码存储于哪里呢？<br>JavaScript 是在创建变量（对象，字符串等）时自动进行了分配内存，并且在不使用它们时&quot;自动&quot;释放。 释放的过程称为垃圾回收；也许是这个&quot;自动&quot;的词语混淆了大家忽略了对内存的管理，然而，了解内存机制是我们进阶 JavaScript 的必然要求；因为很多相关知识的背后都会牵扯到内存管理，比如，浅拷贝与深拷贝的原理、值传递与引用传递、闭包的问题等等；所以了解JS内存机制不仅有助于我们理解 JavaScript 相关的知识，而且还能提高我们的代码质量，打造高性能的应用。</p>
+        <h2 id="导读"><a href="#导读" class="headerlink" title="导读"></a>导读</h2><p>&#12288;&#12288;你在编写代码时，是否有疑问过，编写的代码存储于哪里呢？<br>&#12288;&#12288;JavaScript 是在创建变量（对象，字符串等）时自动进行了分配内存，并且在不使用它们时&quot;自动&quot;释放。 释放的过程称为垃圾回收；也许是这个&quot;自动&quot;的词语混淆了大家忽略了对内存的管理，然而，了解内存机制是我们进阶 JavaScript 的必然要求；因为很多相关知识的背后都会牵扯到内存管理，比如，浅拷贝与深拷贝的原理、值传递与引用传递、闭包的问题等等；所以了解JS内存机制不仅有助于我们理解 JavaScript 相关的知识，而且还能提高我们的代码质量，打造高性能的应用。</p>
 <a id="more"></a>
 
 <h2 id="内存模型"><a href="#内存模型" class="headerlink" title="内存模型"></a>内存模型</h2><p>JS内存空间分为<strong>栈(stack)</strong>、<strong>堆(heap)</strong>、<strong>池(也属于栈)</strong>。 其中<strong>栈</strong>存放变量，<strong>堆</strong>存放复杂对象，<strong>池</strong>存放常量，总的来说(也叫常量池)，内存模型分为<strong>栈</strong>和<strong>堆</strong>两大类。</p>
@@ -409,7 +409,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">11</span>
+          <span class="site-state-item-count">12</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>

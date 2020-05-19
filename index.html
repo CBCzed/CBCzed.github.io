@@ -169,6 +169,78 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/05/17/JavaScript/JavaScript%E6%B7%B1%E6%B5%85%E6%8B%B7%E8%B4%9D/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="zed">
+      <meta itemprop="description" content="欲望提升热忱，毅力磨平高山">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="JavaScript修炼">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          
+            <a href="/2020/05/17/JavaScript/JavaScript%E6%B7%B1%E6%B5%85%E6%8B%B7%E8%B4%9D/" class="post-title-link" itemprop="url">JavaScript深浅拷贝</a>
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-05-17 09:49:42" itemprop="dateCreated datePublished" datetime="2020-05-17T09:49:42+08:00">2020-05-17</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-05-19 12:38:21" itemprop="dateModified" datetime="2020-05-19T12:38:21+08:00">2020-05-19</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="导读"><a href="#导读" class="headerlink" title="导读"></a>导读</h2><p>&#12288;&#12288;不管是在编写代码时，还是面试的时候，JavaScript 深浅拷贝这个知识点是不可或缺的；说起深浅拷贝，其实考验的是我们对 JavaScript 数据类型的理解程度，如果你对数据类型还是有似懂非懂的状态的话，我会先建议你先理解 JavaScript 数据类型后，可以参考 <a href="https://cbczed.github.io/2019/06/30/JavaScript/JavaScript%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B%E8%AF%A6%E8%A7%A3/#more" target="_blank" rel="noopener">《JavaScript数据类型详解》</a> 和 <a href="https://cbczed.github.io/2019/07/15/JavaScript/JavaScript%E5%86%85%E5%AD%98%E8%AF%A6%E8%A7%A3/#more" target="_blank" rel="noopener">《JavaScript内存详解》</a>这两篇文章，这里我们就不在过多的解释；<br>&#12288;&#12288;我们都知道 JavaScript 数据类型分为：基本数据类型和引用数据类型，对于基本数据类型而言是没有深浅拷贝的区别，我们常说的深浅拷贝都是针对于引用数据类型而言的。</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2020/05/17/JavaScript/JavaScript%E6%B7%B1%E6%B5%85%E6%8B%B7%E8%B4%9D/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+        
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/04/26/JavaScript/JavaScript%E4%B9%8Bcall%E4%B8%8Eapply%E4%B8%8Ebind%E7%9A%84%E5%8E%9F%E7%90%86/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -200,7 +272,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-04-28 10:58:17" itemprop="dateModified" datetime="2020-04-28T10:58:17+08:00">2020-04-28</time>
+                <time title="修改时间：2020-05-17 10:13:32" itemprop="dateModified" datetime="2020-05-17T10:13:32+08:00">2020-05-17</time>
               </span>
 
           
@@ -214,7 +286,7 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <h2 id="导读"><a href="#导读" class="headerlink" title="导读"></a>导读</h2><p><span class="en-text"> call </span>、<span class="en-text"> apply </span>、<span class="en-text"> bind </span>经常是老生长谈的话题，在面试中常常会伴随着 this 指向的问题一起出现，我在关于<a href="https://cbczed.github.io/2020/03/10/JavaScript/JavaScript%E4%B9%8Bthis%E4%B9%8B%E8%B0%9C/" target="_blank" rel="noopener">《JavaScript之this之谜》</a>一文中也提到可使用它们来改变 this 的指向，那<span class="en-text"> call </span>、<span class="en-text"> apply </span>、<span class="en-text"> bind </span>究竟是如何改变函数上下文的，我们一起来看看它们的实现原理吧！</p>
+          <h2 id="导读"><a href="#导读" class="headerlink" title="导读"></a>导读</h2><p>&#12288;&#12288;<span class="en-text"> call </span>、<span class="en-text"> apply </span>、<span class="en-text"> bind </span>经常是老生长谈的话题，在面试中常常会伴随着 this 指向的问题一起出现，我在关于<a href="https://cbczed.github.io/2020/03/10/JavaScript/JavaScript%E4%B9%8Bthis%E4%B9%8B%E8%B0%9C/" target="_blank" rel="noopener">《JavaScript之this之谜》</a>一文中也提到可使用它们来改变 this 的指向，那<span class="en-text"> call </span>、<span class="en-text"> apply </span>、<span class="en-text"> bind </span>究竟是如何改变函数上下文的，我们一起来看看它们的实现原理吧！</p>
           <!--noindex-->
             <div class="post-button">
               <a class="btn" href="/2020/04/26/JavaScript/JavaScript%E4%B9%8Bcall%E4%B8%8Eapply%E4%B8%8Ebind%E7%9A%84%E5%8E%9F%E7%90%86/#more" rel="contents">
@@ -264,10 +336,16 @@
                 <i class="fa fa-calendar-o"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
-              
 
-              <time title="创建时间：2020-04-13 09:43:04 / 修改时间：20:57:39" itemprop="dateCreated datePublished" datetime="2020-04-13T09:43:04+08:00">2020-04-13</time>
+              <time title="创建时间：2020-04-13 09:43:04" itemprop="dateCreated datePublished" datetime="2020-04-13T09:43:04+08:00">2020-04-13</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-05-17 10:18:26" itemprop="dateModified" datetime="2020-05-17T10:18:26+08:00">2020-05-17</time>
+              </span>
 
           
 
@@ -280,7 +358,7 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <h2 id="导读"><a href="#导读" class="headerlink" title="导读"></a>导读</h2><p>JavaScript 中闭包无处不在，但很多时候不论是开发时还是在面试的时候，我们并未真正的理解什么是闭包，自己曾经去了解过闭包的相关定义，以为记住了概念就能理解，但实际上从未真正的理解过，每当别人询问起什么是闭包时，自己又陷入了沉思，所以自己专门写一篇闭包的知识来理解闭包的艺术，也希望可以帮助到你脱离似懂非懂的状态；当然在学习闭包之前，你需要对 JavaScript 的作用域有写概念，有助于你更容易的理解闭包，若是不了解 JavaScript 的作用域，建议你先学习下，再学习闭包的知识，可以参考我的 <a href="https://cbczed.github.io/2019/11/10/JavaScript/JavaScript%E4%BD%9C%E7%94%A8%E5%9F%9F%E5%8F%8A%E6%89%A7%E8%A1%8C%E4%B8%8A%E4%B8%8B%E6%96%87%E6%A0%88/" target="_blank" rel="noopener">JavaScript作用域及执行上下文</a> 一文；接下来，我们一起来感受闭包的艺术吧！</p>
+          <h2 id="导读"><a href="#导读" class="headerlink" title="导读"></a>导读</h2><p>&#12288;&#12288;JavaScript 中闭包无处不在，但很多时候不论是开发时还是在面试的时候，我们并未真正的理解什么是闭包，自己曾经去了解过闭包的相关定义，以为记住了概念就能理解，但实际上从未真正的理解过，每当别人询问起什么是闭包时，自己又陷入了沉思，所以自己专门写一篇闭包的知识来理解闭包的艺术，也希望可以帮助到你脱离似懂非懂的状态；当然在学习闭包之前，你需要对 JavaScript 的作用域有写概念，有助于你更容易的理解闭包，若是不了解 JavaScript 的作用域，建议你先学习下，再学习闭包的知识，可以参考我的 <a href="https://cbczed.github.io/2019/11/10/JavaScript/JavaScript%E4%BD%9C%E7%94%A8%E5%9F%9F%E5%8F%8A%E6%89%A7%E8%A1%8C%E4%B8%8A%E4%B8%8B%E6%96%87%E6%A0%88/" target="_blank" rel="noopener">《JavaScript作用域及执行上下文》</a> 一文；接下来，我们一起来感受闭包的艺术吧！</p>
           <!--noindex-->
             <div class="post-button">
               <a class="btn" href="/2020/04/13/JavaScript/JavaScript%E9%97%AD%E5%8C%85/#more" rel="contents">
@@ -338,7 +416,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-04-12 20:44:32" itemprop="dateModified" datetime="2020-04-12T20:44:32+08:00">2020-04-12</time>
+                <time title="修改时间：2020-05-17 10:13:32" itemprop="dateModified" datetime="2020-05-17T10:13:32+08:00">2020-05-17</time>
               </span>
 
           
@@ -352,7 +430,7 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <h2 id="导读"><a href="#导读" class="headerlink" title="导读"></a>导读</h2><p>什么是<span class="en-text"> Promise </span>，什么又是<span class="en-text"> Promise/A+ </span> 规范，自己对这两个问题一直都没有理解明白，所以自己专门想写篇关于<span class="en-text"> Promise </span>的文章来加深对<span class="en-text"> Promise </span>的理解；本文的主要内容是讲述<span class="en-text"> Promise </span>的实现原理，若想了解<span class="en-text"> Promise </span>的详细用法，请移步阮一峰老师<a href="https://es6.ruanyifeng.com/#docs/promise" target="_blank" rel="noopener">ES6 Promise</a>的教程。</p>
+          <h2 id="导读"><a href="#导读" class="headerlink" title="导读"></a>导读</h2><p>&#12288;&#12288;什么是<span class="en-text"> Promise </span>，什么又是<span class="en-text"> Promise/A+ </span> 规范，自己对这两个问题一直都没有理解明白，所以自己专门想写篇关于<span class="en-text"> Promise </span>的文章来加深对<span class="en-text"> Promise </span>的理解；本文的主要内容是讲述<span class="en-text"> Promise </span>的实现原理，若想了解<span class="en-text"> Promise </span>的详细用法，请移步阮一峰老师<a href="https://es6.ruanyifeng.com/#docs/promise" target="_blank" rel="noopener">ES6 Promise</a>的教程。</p>
           <!--noindex-->
             <div class="post-button">
               <a class="btn" href="/2020/04/06/JavaScript/JavaScript%E4%B9%8BPromise%E5%8E%9F%E7%90%86/#more" rel="contents">
@@ -410,7 +488,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-04-07 13:49:37" itemprop="dateModified" datetime="2020-04-07T13:49:37+08:00">2020-04-07</time>
+                <time title="修改时间：2020-05-17 10:13:32" itemprop="dateModified" datetime="2020-05-17T10:13:32+08:00">2020-05-17</time>
               </span>
 
           
@@ -424,7 +502,7 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <h2 id="导读"><a href="#导读" class="headerlink" title="导读"></a>导读</h2><p>在 JavaScript 中<span class="en-text"> this </span>的指代常常是令人头疼的一个问题，不同于其他语言，如 Java 等面向对象的语言中，<span class="en-text"> this </span>的含义是明确且具体的，即指代当前的对象，而在 JavaScript 中<span class="en-text"> this </span>是动态绑定的或者称运行时绑定的，这就给<span class="en-text"> this </span>关键字带来多重的含义，虽然这可能是 JavaScript 作为灵活性语言的标志，但同时也给我们带来了不少困惑，本文将带你揭开 JavaScript 中<span class="en-text"> this </span>的迷底，让你不在深陷其谭。</p>
+          <h2 id="导读"><a href="#导读" class="headerlink" title="导读"></a>导读</h2><p>&#12288;&#12288;在 JavaScript 中<span class="en-text"> this </span>的指代常常是令人头疼的一个问题，不同于其他语言，如 Java 等面向对象的语言中，<span class="en-text"> this </span>的含义是明确且具体的，即指代当前的对象，而在 JavaScript 中<span class="en-text"> this </span>是动态绑定的或者称运行时绑定的，这就给<span class="en-text"> this </span>关键字带来多重的含义，虽然这可能是 JavaScript 作为灵活性语言的标志，但同时也给我们带来了不少困惑，本文将带你揭开 JavaScript 中<span class="en-text"> this </span>的迷底，让你不在深陷其谭。</p>
           <!--noindex-->
             <div class="post-button">
               <a class="btn" href="/2020/03/10/JavaScript/JavaScript%E4%B9%8Bthis%E4%B9%8B%E8%B0%9C/#more" rel="contents">
@@ -482,7 +560,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-04-07 13:49:37" itemprop="dateModified" datetime="2020-04-07T13:49:37+08:00">2020-04-07</time>
+                <time title="修改时间：2020-05-17 10:13:32" itemprop="dateModified" datetime="2020-05-17T10:13:32+08:00">2020-05-17</time>
               </span>
 
           
@@ -496,7 +574,7 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <h2 id="导读"><a href="#导读" class="headerlink" title="导读"></a>导读</h2><p>从一诞生起，JavaScript就是一门<strong>单线程</strong>的语言；因为从其的用途来看，作为浏览器的脚本语言，JavaScript的主要用途是与用户交互，以及操作DOM，这就决定了其是单线程的，否则就会代理复杂的问题，比如，假定JavaScript同时有两个线程，一个线程在某个 DOM 节点上添加内容，另一个线程删除了这个节点，这时浏览器应该以哪个线程为准呢？<br>单线程的理解是一行一行的执行代码，那 JavaScript 的异步编程又是如何实现的呢？本文基于浏览器的执行环境介绍JavaScript的执行机制，揭开JavaScript代码执行的真面目。</p>
+          <h2 id="导读"><a href="#导读" class="headerlink" title="导读"></a>导读</h2><p>&#12288;&#12288;从一诞生起，JavaScript就是一门<strong>单线程</strong>的语言；因为从其的用途来看，作为浏览器的脚本语言，JavaScript的主要用途是与用户交互，以及操作DOM，这就决定了其是单线程的，否则就会代理复杂的问题，比如，假定JavaScript同时有两个线程，一个线程在某个 DOM 节点上添加内容，另一个线程删除了这个节点，这时浏览器应该以哪个线程为准呢？<br>&#12288;&#12288;单线程的理解是一行一行的执行代码，那 JavaScript 的异步编程又是如何实现的呢？本文基于浏览器的执行环境介绍JavaScript的执行机制，揭开JavaScript代码执行的真面目。</p>
           <!--noindex-->
             <div class="post-button">
               <a class="btn" href="/2020/02/23/JavaScript/JavaScript%E6%89%A7%E8%A1%8C%E6%9C%BA%E5%88%B6/#more" rel="contents">
@@ -554,7 +632,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-03-10 15:21:57" itemprop="dateModified" datetime="2020-03-10T15:21:57+08:00">2020-03-10</time>
+                <time title="修改时间：2020-05-17 10:13:32" itemprop="dateModified" datetime="2020-05-17T10:13:32+08:00">2020-05-17</time>
               </span>
 
           
@@ -568,7 +646,7 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <h2 id="导读"><a href="#导读" class="headerlink" title="导读"></a>导读</h2><p>本文主要讲述 JavaScript 的作用域，包括<strong>词法作用域</strong>、<strong>动态作用域</strong>及<strong>JavaScript执行上下文栈</strong>。</p>
+          <h2 id="导读"><a href="#导读" class="headerlink" title="导读"></a>导读</h2><p>&#12288;&#12288;本文主要讲述 JavaScript 的作用域，包括<strong>词法作用域</strong>、<strong>动态作用域</strong>及<strong>JavaScript执行上下文栈</strong>。</p>
           <!--noindex-->
             <div class="post-button">
               <a class="btn" href="/2019/11/10/JavaScript/JavaScript%E4%BD%9C%E7%94%A8%E5%9F%9F%E5%8F%8A%E6%89%A7%E8%A1%8C%E4%B8%8A%E4%B8%8B%E6%96%87%E6%A0%88/#more" rel="contents">
@@ -626,7 +704,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-04-07 13:49:37" itemprop="dateModified" datetime="2020-04-07T13:49:37+08:00">2020-04-07</time>
+                <time title="修改时间：2020-05-17 10:13:32" itemprop="dateModified" datetime="2020-05-17T10:13:32+08:00">2020-05-17</time>
               </span>
 
           
@@ -640,7 +718,7 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <h2 id="导读"><a href="#导读" class="headerlink" title="导读"></a>导读</h2><p>我们经常会使用到<span class="en-text"> new </span><span class="en-text"> instanceof </span>运算符，但你是否知道 new 及 instanceof 在运用时具体的实现过程，本文主要讲述 new、instanceof 实现的底层原理</p>
+          <h2 id="导读"><a href="#导读" class="headerlink" title="导读"></a>导读</h2><p>&#12288;&#12288;我们经常会使用到<span class="en-text"> new </span><span class="en-text"> instanceof </span>运算符，但你是否知道 new 及 instanceof 在运用时具体的实现过程，本文主要讲述 new、instanceof 实现的底层原理</p>
           <!--noindex-->
             <div class="post-button">
               <a class="btn" href="/2019/10/16/JavaScript/JavaScript%E4%B9%8Bnew%E4%B8%8Einstanceof%E7%9A%84%E5%8E%9F%E7%90%86/#more" rel="contents">
@@ -698,7 +776,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-04-07 13:49:37" itemprop="dateModified" datetime="2020-04-07T13:49:37+08:00">2020-04-07</time>
+                <time title="修改时间：2020-05-17 10:13:32" itemprop="dateModified" datetime="2020-05-17T10:13:32+08:00">2020-05-17</time>
               </span>
 
           
@@ -712,7 +790,7 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <h2 id="导读"><a href="#导读" class="headerlink" title="导读"></a>导读</h2><p>什么是继承呢？简单点说就是通过某种方式让一个对象可以访问到另一个对象中的属性和方法。<br>JavaScript 本质上不能算是一门面向对象的编程语言，因为它对于封装、继承、多态这些面向对象语言的特点并没有在语言层面上提供原生的支持。但是，它引入了原型 (prototype) 的概念，可以让我们以另一种方式模仿类，并通过原型链的方式实现了父类子类之间共享属性的继承以及身份确认机制。</p>
+          <h2 id="导读"><a href="#导读" class="headerlink" title="导读"></a>导读</h2><p>&#12288;&#12288;什么是继承呢？简单点说就是通过某种方式让一个对象可以访问到另一个对象中的属性和方法。<br>&#12288;&#12288;JavaScript 本质上不能算是一门面向对象的编程语言，因为它对于封装、继承、多态这些面向对象语言的特点并没有在语言层面上提供原生的支持。但是，它引入了原型 (prototype) 的概念，可以让我们以另一种方式模仿类，并通过原型链的方式实现了父类子类之间共享属性的继承以及身份确认机制。</p>
           <!--noindex-->
             <div class="post-button">
               <a class="btn" href="/2019/09/16/JavaScript/JavaScript%E7%BB%A7%E6%89%BF/#more" rel="contents">
@@ -770,7 +848,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-04-07 13:49:37" itemprop="dateModified" datetime="2020-04-07T13:49:37+08:00">2020-04-07</time>
+                <time title="修改时间：2020-05-17 10:13:32" itemprop="dateModified" datetime="2020-05-17T10:13:32+08:00">2020-05-17</time>
               </span>
 
           
@@ -784,82 +862,10 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <h2 id="导读"><a href="#导读" class="headerlink" title="导读"></a>导读</h2><p>JavaScript 常被描述为一种基于原型的语言；那什么是原型呢？原型是 JavaScript 中一个比较难理解的概念，原型相关的属性也比较多；当初自己学习时也是一头雾水，但却是进阶 JavaScript 必不可少的一步；像继承、设计模式等都涉及到原型的相关知识；希望你通过阅读本文，可以让你对原型及原型的设计有所认识。</p>
+          <h2 id="导读"><a href="#导读" class="headerlink" title="导读"></a>导读</h2><p>&#12288;&#12288;JavaScript 常被描述为一种基于原型的语言；那什么是原型呢？原型是 JavaScript 中一个比较难理解的概念，原型相关的属性也比较多；当初自己学习时也是一头雾水，但却是进阶 JavaScript 必不可少的一步；像继承、设计模式等都涉及到原型的相关知识；希望你通过阅读本文，可以让你对原型及原型的设计有所认识。</p>
           <!--noindex-->
             <div class="post-button">
               <a class="btn" href="/2019/08/16/JavaScript/JavaScript%E5%8E%9F%E5%9E%8B%E5%8F%8A%E5%8E%9F%E5%9E%8B%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-        
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/07/15/JavaScript/JavaScript%E5%86%85%E5%AD%98%E8%AF%A6%E8%A7%A3/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.jpg">
-      <meta itemprop="name" content="zed">
-      <meta itemprop="description" content="欲望提升热忱，毅力磨平高山">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="JavaScript修炼">
-    </span>
-      <header class="post-header">
-        <h1 class="post-title" itemprop="name headline">
-          
-            <a href="/2019/07/15/JavaScript/JavaScript%E5%86%85%E5%AD%98%E8%AF%A6%E8%A7%A3/" class="post-title-link" itemprop="url">JavaScript内存详解</a>
-        </h1>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2019-07-15 11:51:11" itemprop="dateCreated datePublished" datetime="2019-07-15T11:51:11+08:00">2019-07-15</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-04-07 13:49:37" itemprop="dateModified" datetime="2020-04-07T13:49:37+08:00">2020-04-07</time>
-              </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h2 id="导读"><a href="#导读" class="headerlink" title="导读"></a>导读</h2><p>你在编写代码时，是否有疑问过，编写的代码存储于哪里呢？<br>JavaScript 是在创建变量（对象，字符串等）时自动进行了分配内存，并且在不使用它们时&quot;自动&quot;释放。 释放的过程称为垃圾回收；也许是这个&quot;自动&quot;的词语混淆了大家忽略了对内存的管理，然而，了解内存机制是我们进阶 JavaScript 的必然要求；因为很多相关知识的背后都会牵扯到内存管理，比如，浅拷贝与深拷贝的原理、值传递与引用传递、闭包的问题等等；所以了解JS内存机制不仅有助于我们理解 JavaScript 相关的知识，而且还能提高我们的代码质量，打造高性能的应用。</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2019/07/15/JavaScript/JavaScript%E5%86%85%E5%AD%98%E8%AF%A6%E8%A7%A3/#more" rel="contents">
                 阅读全文 &raquo;
               </a>
             </div>
@@ -951,7 +957,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">11</span>
+          <span class="site-state-item-count">12</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
