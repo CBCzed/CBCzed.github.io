@@ -48,21 +48,21 @@
 
   <meta name="description" content="导读&amp;#12288;&amp;#12288;JavaScript 常被描述为一种基于原型的语言；那什么是原型呢？原型是 JavaScript 中一个比较难理解的概念，原型相关的属性也比较多；当初自己学习时也是一头雾水，但却是进阶 JavaScript 必不可少的一步；像继承、设计模式等都涉及到原型的相关知识；希望你通过阅读本文，可以让你对原型及原型的设计有所认识。">
 <meta property="og:type" content="article">
-<meta property="og:title" content="JavaScript原型及原型设计模式">
-<meta property="og:url" content="http://yoursite.com/2019/08/16/JavaScript/JavaScript%E5%8E%9F%E5%9E%8B%E5%8F%8A%E5%8E%9F%E5%9E%8B%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/index.html">
+<meta property="og:title" content="JavaScript原型及原型链">
+<meta property="og:url" content="http://yoursite.com/2019/08/16/JavaScript/JavaScript%E5%8E%9F%E5%9E%8B%E5%8F%8A%E5%8E%9F%E5%9E%8B%E9%93%BE/index.html">
 <meta property="og:site_name" content="JavaScript修炼">
 <meta property="og:description" content="导读&amp;#12288;&amp;#12288;JavaScript 常被描述为一种基于原型的语言；那什么是原型呢？原型是 JavaScript 中一个比较难理解的概念，原型相关的属性也比较多；当初自己学习时也是一头雾水，但却是进阶 JavaScript 必不可少的一步；像继承、设计模式等都涉及到原型的相关知识；希望你通过阅读本文，可以让你对原型及原型的设计有所认识。">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="http://yoursite.com/images/JavaScript/prototype-chain.jpg">
 <meta property="article:published_time" content="2019-08-16T01:37:39.000Z">
-<meta property="article:modified_time" content="2020-06-05T11:11:45.717Z">
+<meta property="article:modified_time" content="2020-06-05T11:13:33.840Z">
 <meta property="article:author" content="zed">
 <meta property="article:tag" content="JavaScript">
 <meta property="article:tag" content="博客">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="http://yoursite.com/images/JavaScript/prototype-chain.jpg">
 
-<link rel="canonical" href="http://yoursite.com/2019/08/16/JavaScript/JavaScript%E5%8E%9F%E5%9E%8B%E5%8F%8A%E5%8E%9F%E5%9E%8B%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/">
+<link rel="canonical" href="http://yoursite.com/2019/08/16/JavaScript/JavaScript%E5%8E%9F%E5%9E%8B%E5%8F%8A%E5%8E%9F%E5%9E%8B%E9%93%BE/">
 
 
 <script id="page-configurations">
@@ -74,7 +74,7 @@
   };
 </script>
 
-  <title>JavaScript原型及原型设计模式 | JavaScript修炼</title>
+  <title>JavaScript原型及原型链 | JavaScript修炼</title>
   
 
 
@@ -173,7 +173,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/08/16/JavaScript/JavaScript%E5%8E%9F%E5%9E%8B%E5%8F%8A%E5%8E%9F%E5%9E%8B%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/08/16/JavaScript/JavaScript%E5%8E%9F%E5%9E%8B%E5%8F%8A%E5%8E%9F%E5%9E%8B%E9%93%BE/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.jpg">
@@ -186,7 +186,7 @@
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          JavaScript原型及原型设计模式
+          JavaScript原型及原型链
         </h1>
 
         <div class="post-meta">
@@ -203,7 +203,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-06-05 19:11:45" itemprop="dateModified" datetime="2020-06-05T19:11:45+08:00">2020-06-05</time>
+                <time title="修改时间：2020-06-05 19:13:33" itemprop="dateModified" datetime="2020-06-05T19:13:33+08:00">2020-06-05</time>
               </span>
 
           
