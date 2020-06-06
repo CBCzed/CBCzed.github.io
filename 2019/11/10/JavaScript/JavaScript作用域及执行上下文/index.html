@@ -54,7 +54,7 @@
 <meta property="og:description" content="导读&amp;#12288;&amp;#12288;本文主要讲述 JavaScript 的作用域，包括词法作用域、动态作用域及JavaScript执行上下文栈。">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2019-11-10T12:22:46.000Z">
-<meta property="article:modified_time" content="2020-06-05T14:24:10.911Z">
+<meta property="article:modified_time" content="2020-06-06T06:31:01.718Z">
 <meta property="article:author" content="zed">
 <meta property="article:tag" content="JavaScript">
 <meta property="article:tag" content="博客">
@@ -201,7 +201,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-06-05 22:24:10" itemprop="dateModified" datetime="2020-06-05T22:24:10+08:00">2020-06-05</time>
+                <time title="修改时间：2020-06-06 14:31:01" itemprop="dateModified" datetime="2020-06-06T14:31:01+08:00">2020-06-06</time>
               </span>
 
           
@@ -242,18 +242,33 @@
 <h3 id="动态作用域"><a href="#动态作用域" class="headerlink" title="动态作用域"></a>动态作用域</h3><p>动态作用域基于调用栈的，而不是代码中的作用域嵌套；即函数的作用域是在函数调用的时候才决定的。</p>
 <p>如上词法作用域的代码，若 JavaScript 采取的是动态作用域，因为 scope1 是在 scope2 里调用，所以最终的打印结果是2。</p>
 <p><strong>JavaScript 中仅存的应用动态作用域的地方就是 <span class="en-text"> this </span> 对象的引用</strong>。</p>
-<h3 id="作用域查找"><a href="#作用域查找" class="headerlink" title="作用域查找"></a>作用域查找</h3><p>作用域是根据名称查找变量的一套规则，实际开发中，往往存在很多的作用域，而当一个块或函数嵌套在另一个块或函数中时，就发生了作用域的嵌套，也就形成了<strong>作用域连</strong>，在当前作用域中无法找到某个变量时，就会在外层嵌套的作用域中继续查找，直到找到该变量，或抵达最外层的作用域(全局作用域)为止</p>
+<h3 id="作用域查找"><a href="#作用域查找" class="headerlink" title="作用域查找"></a>作用域查找</h3><p>作用域是根据名称查找变量的一套规则，实际开发中，往往存在很多的作用域，而当一个块或函数嵌套在另一个块或函数中时，就发生了作用域的嵌套，也就形成了<strong>作用域链</strong>，在当前作用域中无法找到某个变量时，就会在外层嵌套的作用域中继续查找，直到找到该变量，或抵达最外层的作用域(全局作用域)为止</p>
 <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">foo</span> (<span class="params">a</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">const</span> b = a * <span class="number">2</span></span><br><span class="line">  <span class="function"><span class="keyword">function</span> <span class="title">bar</span> (<span class="params">c</span>) </span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(a, b, c)</span><br><span class="line">  &#125;</span><br><span class="line">  bar(b * <span class="number">2</span>)</span><br><span class="line">&#125;</span><br><span class="line">foo(<span class="number">2</span>)</span><br></pre></td></tr></table></figure>
 <p>如上代码，存在三个作用域，全局作用域、foo 及 bar 函数作用域，所以在查找变量时，顺序是：bar =&gt; foo =&gt; 全局作用域</p>
-<h2 id="执行上下文"><a href="#执行上下文" class="headerlink" title="执行上下文"></a>执行上下文</h2><p>你是否理解 JavaScript 中的代码执行，是否为一行一行执行呢？直接上个例子：</p>
+<h2 id="执行上下文"><a href="#执行上下文" class="headerlink" title="执行上下文"></a>执行上下文</h2><p>你理解 JavaScript 代码执行，是否是为简单粗暴的一行一行执行呢？直接上个例子：</p>
 <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> func = <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">'func1'</span>)</span><br><span class="line">&#125;</span><br><span class="line">func() <span class="comment">// func1</span></span><br><span class="line"><span class="keyword">var</span> func = <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">'func2'</span>)</span><br><span class="line">&#125;</span><br><span class="line">func() <span class="comment">// func2</span></span><br></pre></td></tr></table></figure>
 <p>如上的代码，打印出了正确的结果，那再看如下例子：</p>
 <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">func</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">'func1'</span>)</span><br><span class="line">&#125;</span><br><span class="line">func() <span class="comment">// func2</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">func</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">'func2'</span>)</span><br><span class="line">&#125;</span><br><span class="line">func() <span class="comment">// func2</span></span><br></pre></td></tr></table></figure>
-<p>此时的都打印出了 func2，所以 JavaScript 引擎并非一行一行地分析和执行程序，而是一段一段地分析执行。当执行一段代码的时候，会进行一个”准备工作”，比如第一个例子中的变量提升，和第二个例子中的函数提升；<br>而这”一段一段”其实指的是：可执行代码，分为全局代码、函数代码、eval 代码；而”准备工作”其实就是”执行上下文”。</p>
+<p>此时的都打印出了 func2，所以 JavaScript 引擎并非一行一行地分析和执行程序，而是一段一段的执行，而这&quot;一段一段&quot;指的是：可执行代码，分为<strong>全局代码</strong>、<strong>函数代码</strong>、<strong>eval 代码</strong>；而任何的 JavaScript 代码片段在执行前都要进行&quot;编译&quot;，做好执行的准备，而这个准备，其实就是在创建执行上下文。<br>执行上下文：主要是指当前执行环境中的变量、函数声明，参数（arguments），作用域链，this 等信息，包含以下几种类型；</p>
 <h3 id="执行上下文类型"><a href="#执行上下文类型" class="headerlink" title="执行上下文类型"></a>执行上下文类型</h3><ul>
-<li>全局执行上下文：默认的上下文，任何不在函数内部的代码都在全局上下文中，它会执行两件事：创建一个全局的 window 对象（浏览器的情况下），并且设置 this 的值等于这个全局对象。一个程序中只会有一个全局执行上下文。</li>
-<li>函数执行上下文：每当一个函数被调用时, 都会为该函数创建一个新的执行上下文，所以函数执行上下文会存在多个；执行顺序有<strong>调用栈</strong>决定；</li>
-<li>eval 函数执行上下文：执行在 eval 函数内部的代码也会有它属于自己的执行上下文，但 eval 函数现在几乎没怎么使用，有兴趣的小伙伴可以自行了解；</li>
+<li><strong>全局执行上下文</strong>：默认的上下文，任何不在函数内部的代码都在全局上下文中，它会执行两件事：创建一个全局的 window 对象（浏览器的情况下），并且设置 this 的值等于这个全局对象。一个程序中只会有一个全局执行上下文。</li>
+<li><strong>函数执行上下文</strong>：每当一个函数被调用时, 都会为该函数创建一个新的执行上下文，所以函数执行上下文会存在多个；执行顺序有<strong>调用栈</strong>决定；</li>
+<li><strong>eval 函数执行上下文</strong>：执行在 eval 函数内部的代码也会有它属于自己的执行上下文，但 eval 函数现在几乎没怎么使用，有兴趣的小伙伴可以自行了解；</li>
+</ul>
+<h3 id="如何创建执行上下文"><a href="#如何创建执行上下文" class="headerlink" title="如何创建执行上下文"></a>如何创建执行上下文</h3><p>JavaScript 引擎是如何创建执行上下文的呢？分两个阶段，一个是<strong>创建阶段</strong>，另一个是<strong>执行阶段</strong>；全局执行上下文在程序开始运行时便会创建，函数执行上下文是在函数被调用时创建；</p>
+<ul>
+<li><strong>创建阶段</strong>：主要做了三件事：<ul>
+<li>生成变量对象，包含函数、变量声明及提升和创建参数 arguments；</li>
+<li>建立作用域链</li>
+<li>确定 this 对象的指向</li>
+</ul>
+</li>
+<li><strong>创建阶段</strong>：也是做了三件事：<ul>
+<li>变量赋值</li>
+<li>函数引用</li>
+<li>执行其它代码</li>
+</ul>
+</li>
 </ul>
 <h3 id="执行栈"><a href="#执行栈" class="headerlink" title="执行栈"></a>执行栈</h3><p>JavaScript 引擎为管理执行上下文，所以创建了<strong>执行上下文栈</strong>（Execution context stack，ECS）来管理执行上下文，简称执行栈（或者称为调用栈）。执行栈是一种数据结构，具有<strong>先进后出</strong>的特点，我们用数组来模拟实现：</p>
 <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ECStack = []</span><br></pre></td></tr></table></figure>
@@ -262,7 +277,7 @@
 <p>当执行一个函数的时候，就会创建一个执行上下文，并且压入执行上下文栈，栈的工作原理是先入后出，当函数执行完毕的时候，就会将函数的执行上下文从栈中弹出。具体实现的代码如下：</p>
 <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// func1()</span></span><br><span class="line">ECStack.push(<span class="xml"><span class="tag">&lt;<span class="name">func1</span>&gt;</span> functionContext);</span></span><br><span class="line"></span><br><span class="line"><span class="xml">// func1调用了func2，创建func2的执行上下文</span></span><br><span class="line">ECStack.push(&lt;func2&gt; functionContext);</span><br><span class="line"></span><br><span class="line">// func2调用了func3, 创建func3的执行上下文</span><br><span class="line">ECStack.push(&lt;func3&gt; functionContext);</span><br><span class="line"></span><br><span class="line">// func3执行完毕</span><br><span class="line">ECStack.pop();</span><br><span class="line"></span><br><span class="line">// func2执行完毕</span><br><span class="line">ECStack.pop();</span><br><span class="line"></span><br><span class="line">// func1执行完毕</span><br><span class="line">ECStack.pop();</span><br><span class="line">// javascript接着执行下面的代码，但是ECStack底层永远有个globalContext</span><br></pre></td></tr></table></figure>
 
-<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a href="https://juejin.im/post/5ba32171f265da0ab719a6d7" target="_blank" rel="noopener">理解 JavaScript 中的执行上下文和执行栈</a></p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a href="https://juejin.im/post/5ba32171f265da0ab719a6d7" target="_blank" rel="noopener">理解 JavaScript 中的执行上下文和执行栈</a><br><a href="https://github.com/mqyqingfeng/Blog/issues/4" target="_blank" rel="noopener">JavaScript深入之执行上下文栈 </a><br>《你不知道的JavaScript(上卷)》</p>
 
     </div>
 
@@ -344,7 +359,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#导读"><span class="nav-number">1.</span> <span class="nav-text">导读</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#作用域"><span class="nav-number">2.</span> <span class="nav-text">作用域</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#词法作用域"><span class="nav-number">2.1.</span> <span class="nav-text">词法作用域</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#动态作用域"><span class="nav-number">2.2.</span> <span class="nav-text">动态作用域</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#作用域查找"><span class="nav-number">2.3.</span> <span class="nav-text">作用域查找</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#执行上下文"><span class="nav-number">3.</span> <span class="nav-text">执行上下文</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#执行上下文类型"><span class="nav-number">3.1.</span> <span class="nav-text">执行上下文类型</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#执行栈"><span class="nav-number">3.2.</span> <span class="nav-text">执行栈</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考"><span class="nav-number">4.</span> <span class="nav-text">参考</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#导读"><span class="nav-number">1.</span> <span class="nav-text">导读</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#作用域"><span class="nav-number">2.</span> <span class="nav-text">作用域</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#词法作用域"><span class="nav-number">2.1.</span> <span class="nav-text">词法作用域</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#动态作用域"><span class="nav-number">2.2.</span> <span class="nav-text">动态作用域</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#作用域查找"><span class="nav-number">2.3.</span> <span class="nav-text">作用域查找</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#执行上下文"><span class="nav-number">3.</span> <span class="nav-text">执行上下文</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#执行上下文类型"><span class="nav-number">3.1.</span> <span class="nav-text">执行上下文类型</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#如何创建执行上下文"><span class="nav-number">3.2.</span> <span class="nav-text">如何创建执行上下文</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#执行栈"><span class="nav-number">3.3.</span> <span class="nav-text">执行栈</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考"><span class="nav-number">4.</span> <span class="nav-text">参考</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
