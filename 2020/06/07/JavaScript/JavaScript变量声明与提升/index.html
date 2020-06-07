@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    hostname: new URL('http://yoursite.com').hostname,
+    root: '/',
+    scheme: 'Gemini',
+    version: '7.7.0',
+    exturl: false,
+    sidebar: {"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},
+    copycode: {"enable":false,"show_result":false,"style":null},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":false},
+    bookmark: {"enable":false,"color":"#222","save":"auto"},
+    fancybox: false,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    comments: {"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},
+    algolia: {
+      appID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: '',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}
+  };
+</script>
+
+  <meta name="description" content="导读&amp;#12288;&amp;#12288;不知你是否有过这样的疑问，为什么使用 let、const 声明的全局变量在 window 对象里面访问不到，而 var 声明的全局变量却可以？是否知道变量不同声明方式之间的区别呢？是否有疑问过，函数及 var 声明的变量，都可以先使用而后声明，这是因为什么呢？是否了解过变量提升呢？本文主要讲述 JavaScript 变量不同声明方式之间的区别及变量提升的知识，希">
+<meta property="og:type" content="article">
+<meta property="og:title" content="JavaScript变量声明与提升">
+<meta property="og:url" content="http://yoursite.com/2020/06/07/JavaScript/JavaScript%E5%8F%98%E9%87%8F%E5%A3%B0%E6%98%8E%E4%B8%8E%E6%8F%90%E5%8D%87/index.html">
+<meta property="og:site_name" content="JavaScript修炼">
+<meta property="og:description" content="导读&amp;#12288;&amp;#12288;不知你是否有过这样的疑问，为什么使用 let、const 声明的全局变量在 window 对象里面访问不到，而 var 声明的全局变量却可以？是否知道变量不同声明方式之间的区别呢？是否有疑问过，函数及 var 声明的变量，都可以先使用而后声明，这是因为什么呢？是否了解过变量提升呢？本文主要讲述 JavaScript 变量不同声明方式之间的区别及变量提升的知识，希">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2020-06-07T06:23:17.000Z">
+<meta property="article:modified_time" content="2020-06-07T13:08:46.627Z">
+<meta property="article:author" content="zed">
+<meta property="article:tag" content="JavaScript">
+<meta property="article:tag" content="博客">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://yoursite.com/2020/06/07/JavaScript/JavaScript%E5%8F%98%E9%87%8F%E5%A3%B0%E6%98%8E%E4%B8%8E%E6%8F%90%E5%8D%87/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true
+  };
+</script>
+
+  <title>JavaScript变量声明与提升 | JavaScript修炼</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">JavaScript修炼</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+  </div>
+
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
+
+  </li>
+  </ul>
+
+</nav>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/06/07/JavaScript/JavaScript%E5%8F%98%E9%87%8F%E5%A3%B0%E6%98%8E%E4%B8%8E%E6%8F%90%E5%8D%87/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="zed">
+      <meta itemprop="description" content="欲望提升热忱，毅力磨平高山">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="JavaScript修炼">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          JavaScript变量声明与提升
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2020-06-07 14:23:17 / 修改时间：21:08:46" itemprop="dateCreated datePublished" datetime="2020-06-07T14:23:17+08:00">2020-06-07</time>
+            </span>
+
+          
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="导读"><a href="#导读" class="headerlink" title="导读"></a>导读</h2><p>&#12288;&#12288;不知你是否有过这样的疑问，为什么使用<span class="en-text"> let、const </span>声明的全局变量在<span class="en-text"> window </span>对象里面访问不到，而<span class="en-text"> var </span>声明的全局变量却可以？是否知道变量不同声明方式之间的区别呢？是否有疑问过，函数及<span class="en-text"> var </span>声明的变量，都可以先使用而后声明，这是因为什么呢？是否了解过变量提升呢？本文主要讲述 JavaScript 变量不同声明方式之间的区别及变量提升的知识，希望对你读有所获。</p>
+<a id="more"></a>
+
+<h2 id="变量声明方式"><a href="#变量声明方式" class="headerlink" title="变量声明方式"></a>变量声明方式</h2><p>JavaScript 声明变量的方式有以下几种：</p>
+<ul>
+<li><span class="en-text"> var、let、const </span>声明普通变量；</li>
+<li><span class="en-text"> function </span>声明函数；</li>
+<li><span class="en-text"> class </span>声明类；</li>
+<li><span class="en-text"> import </span>导入</li>
+</ul>
+<p><span class="en-text"> function、class、import </span>都是专有声明方式，这里我们就不讲述了，我们主要来看看<span class="en-text"> var、let、const </span>之间的区别。</p>
+<h3 id="var"><a href="#var" class="headerlink" title="var"></a>var</h3><p>使用<span class="en-text"> var </span>声明的变量有如下特征：</p>
+<p>1.变量的作用域范围只有全局作用域和函数（局部）作用域，不存在块级作用域，且存在变量提升的情况；<br>2.声明的全局变量会挂载到<span class="en-text"> window </span>对象；<br>2.可以在同一作用域重复声明同名变量，不同作用域声明的同名变量不会被覆盖；<br>3.在块级作用域声明的变量会作用于其外部的作用域；<br>4.在非严格模式下，未声明的变量直接赋值时，会被隐式的创建全局变量，在严格模式下则会报错</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">console</span>.log(a) <span class="comment">// undefined；变量提升，所以可以访问</span></span><br><span class="line"><span class="keyword">var</span> a = <span class="string">'a'</span></span><br><span class="line"><span class="built_in">console</span>.log(<span class="built_in">window</span>.a) <span class="comment">// a</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 不同作用域声明的同名变量不会被覆盖</span></span><br><span class="line"><span class="keyword">var</span> b = <span class="string">'b1'</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">fn</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">var</span> b = <span class="string">'b2'</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="built_in">console</span>.log(b) <span class="comment">// b1; </span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 在块级作用域声明的变量会作用于其外部的作用域</span></span><br><span class="line"><span class="keyword">if</span> (<span class="literal">true</span>) &#123;</span><br><span class="line">  <span class="keyword">var</span> c = <span class="string">'c'</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="built_in">console</span>.log(c) <span class="comment">// c</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 非严格模式下会被隐式创建为全局变量</span></span><br><span class="line">d = <span class="string">'d'</span></span><br><span class="line"><span class="built_in">console</span>.log(d) <span class="comment">// d</span></span><br><span class="line"><span class="built_in">console</span>.log(<span class="built_in">window</span>.d) <span class="comment">// d</span></span><br></pre></td></tr></table></figure>
+<h3 id="let"><a href="#let" class="headerlink" title="let"></a>let</h3><p>使用<span class="en-text"> let </span>声明的变量有如下特征：</p>
+<p>1.变量需先声明才能使用，不存在变量提升的情况同一作用域不能重复声明同名变量；<br>2.存在块级作用域，即暂时性死区（TDZ），声明的变量会被绑定在该区域，不会受外部的影响；<br>3.声明的全局变量不会挂载到<span class="en-text"> window </span>对象；</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 先声明才能使用, 不存在变量提升，也不会作为 window 对象的属性</span></span><br><span class="line"><span class="built_in">console</span>.log(a) <span class="comment">// Uncaught ReferenceError: Cannot access 'a' before initialization</span></span><br><span class="line"><span class="keyword">let</span> a = <span class="number">1</span></span><br><span class="line"><span class="built_in">console</span>.log(a) <span class="comment">// 1</span></span><br><span class="line"><span class="built_in">console</span>.log(<span class="built_in">window</span>.a) <span class="comment">// undefined</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 存在块级作用域，绑定在 if 的块级作用域内</span></span><br><span class="line"><span class="keyword">var</span> b = <span class="string">'b1'</span></span><br><span class="line"><span class="keyword">if</span> (<span class="literal">true</span>) &#123;</span><br><span class="line">  b = <span class="string">'b2'</span> <span class="comment">// Uncaught ReferenceError: Cannot access 'a' before initialization</span></span><br><span class="line">  <span class="keyword">let</span> b</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="const"><a href="#const" class="headerlink" title="const"></a>const</h3><p><span class="en-text"> const </span>用于声明常量，且声明后需立即初始化，初始化后就不能修改其值，其它特征与<span class="en-text"> let </span>差不多；</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> A <span class="comment">// Uncaught SyntaxError: Missing initializer in const declaration</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> A = <span class="number">1</span></span><br><span class="line">A = <span class="number">2</span> <span class="comment">// Uncaught TypeError: Assignment to constant variable</span></span><br></pre></td></tr></table></figure>
+<p><span class="en-text"> const </span>的本质，其实并不是值不能改动，而是变量对应的<strong>内存地址</strong>不能改动；对于基本数据类型（Number、String、Boolean 等），值保存在变量指向内存地址，就等同于常量，所以不能改变。但对于引用数据类型（对象和数组），变量所指向的内存地址，保存的只是一个指向实际数据的指针，所以还是可以修改其属性的值；</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> obj = &#123;&#125;</span><br><span class="line">obj.a = <span class="string">'a'</span></span><br><span class="line"><span class="built_in">console</span>.log(obj.a) <span class="comment">// a</span></span><br><span class="line"></span><br><span class="line">obj = &#123;&#125; <span class="comment">// Uncaught TypeError: Assignment to constant variable</span></span><br></pre></td></tr></table></figure>
+<h3 id="为什么const和let声明的变量不在window上"><a href="#为什么const和let声明的变量不在window上" class="headerlink" title="为什么const和let声明的变量不在window上"></a>为什么const和let声明的变量不在window上</h3><p>想要知道这个问题的答案，需要从词法环境（Lexical Environments）入手，词法环境是一种规范类型，用于根据 ECMAScript 代码的词法嵌套结构定义标识符与特定变量和函数的关联。一个词法环境由一个环境记录（Environment Records）和一个可能为空的外部词法环境的引用组成；通常，词法环境与 ECMAScript 代码的特定句法结构有关；例如函数声明，块语句，try 语句中的 catch 等代码每次运算后会产生新的词法环境。<br>环境记录（Environment Records）可以被视为一个抽象的类，其包含三个子类：<strong>声明式环境记录（declarative Environment Record）</strong>, <strong>对象环境记录（object Environment Record）</strong>, <strong>全局环境记录（global Environment Record）</strong>。<br>声明式环境记录与对象环境记录这里我们不过多解释，有兴趣的可以查看<a href="https://tc39.es/ecma262/#sec-environment-records" target="_blank" rel="noopener">官方文档</a>，主要来看下全局环境记录：<br>官网的解释：</p>
+<blockquote>
+<p>A global Environment Record is used to represent the outer most scope that is shared by all of the ECMAScript Script elements that are processed in a common realm. A global Environment Record provides the bindings for built-in globals (clause 18), properties of the global object, and for all top-level declarations that occur within a Script</p>
+</blockquote>
+<p>大概意思是，全局环境记录用于表示在全局领域中处理的所有 ECMAScript 脚本元素共享的最外部作用域（全局作用域）。全局环境记录为内置全局变量，全局对象的属性以及脚本中发生的所有顶级声明提供了绑定；<br>再看下这段：</p>
+<blockquote>
+<p>A global Environment Record is logically a single record but it is specified as a composite encapsulating an object Environment Record and a declarative Environment Record. The object Environment Record has as its base object the global object of the associated Realm Record. This global object is the value returned by the global Environment Record’s GetThisBinding concrete method. The object Environment Record component of a global Environment Record contains the bindings for all built-in globals and all bindings introduced by a FunctionDeclaration, GeneratorDeclaration, AsyncFunctionDeclaration, AsyncGeneratorDeclaration, or VariableStatement contained in global code. The bindings for all other ECMAScript declarations in global code are contained in the declarative Environment Record component of the global Environment Record。</p>
+</blockquote>
+<p>大概意思是，全局环境记录是一个复合环境，包含了对象环境记录和声明性环境记录；对象环境记录将关联领域记录的全局对象作为其基对象；此全局对象是全局环境记录的 GetThisBinding 方法返回的值；全局环境记录的对象环境记录包含所有内置全局变量的绑定以及全局代码中包含的 <strong>FunctionDeclaration</strong>，GeneratorDeclaration，AsyncFunctionDeclaration，AsyncGeneratorDeclaration 或 <strong>VariableStatement</strong> 引入的所有绑定。全局代码中所有其他 ECMAScript 声明的绑定包含在全局环境记录的<strong>声明性环境记录</strong>部分中。<br>所以对象环境记录包含的 VariableStatement 是在全局对象中，而 VariableStatement 指的就是使用<span class="en-text"> var </span>声明的变量，而除了对象环境记录中的其它声明，都将声明性环境记录中，所以<span class="en-text"> let、const、class </span>声明的全局变量是不会挂载到<span class="en-text"> window </span>上的，这也就解释了这道题的答案。</p>
+<h3 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h3><ul>
+<li><span class="en-text"> var </span>与<span class="en-text"> let </span>用于声明变量，<span class="en-text"> const </span>用于声明常量；</li>
+<li><span class="en-text"> var </span>声明的变量存在变量提升，可以先使用后声明，而<span class="en-text"> let、const </span>声明的变量则不存在变量提升，需声明后才可以使用；</li>
+<li><span class="en-text"> var </span>声明的变量不存在块级作用域，而<span class="en-text"> let、const </span>则存在；</li>
+<li><span class="en-text"> let、const </span>不允许在同一作用域内，重复声明同名变量；</li>
+<li><span class="en-text"> const </span>只用于声明常量，声明后需要立即初始化，初始化后就不可重新赋值；</li>
+<li><span class="en-text"> var </span>声明的全局变量会挂载到顶层对象，而<span class="en-text"> let、const </span>则不会</li>
+</ul>
+<h2 id="变量提升"><a href="#变量提升" class="headerlink" title="变量提升"></a>变量提升</h2><p>JavaScript 中，变量提升只针对<span class="en-text"> var </span>及<span class="en-text"> function </span>语句；使用<span class="en-text"> var </span>及<span class="en-text"> function </span>声明的变量及函数都可以先使用再声明，这个过程形象地想象成所有的声明(变量和函数)都会被&quot;移动&quot;到各自作用域的最顶端，这个过程被称为提升；要想理解&quot;移动&quot;的意思，你需要了解<strong>执行上下文</strong>的知识点，可以参考<a href="https://cbczed.github.io/2019/11/10/JavaScript/JavaScript%E4%BD%9C%E7%94%A8%E5%9F%9F%E5%8F%8A%E6%89%A7%E8%A1%8C%E4%B8%8A%E4%B8%8B%E6%96%87/#more" target="_blank" rel="noopener">JavaScript作用域及执行上下文</a>。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">console</span>.log(a) <span class="comment">// undefined</span></span><br><span class="line">foo() <span class="comment">// foo</span></span><br><span class="line"><span class="keyword">var</span> a = <span class="number">2</span>;</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">foo</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">'foo'</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>任何 JavaScript 代码在执行前都需要进行&quot;编译&quot;，编译阶段会创建执行上下文，如上代码，变量<span class="en-text"> a </span>还未声明，<span class="en-text"> foo </span>函数也是在声明前调用，然而却都可以执行，这就是执行上下文起到的作用，当要执行代码时，JavaScript 引擎会将变量<span class="en-text"> a </span>及函数<span class="en-text"> foo </span>提前&quot;移动&quot;到作用域的顶端先声明，所以代码都可以正常执行；但是<strong>变量的初始化不会提升</strong>，所以变量<span class="en-text"> a </span>是的值是<span class="en-text"> undefined </span>。<br>不过需要注意一点，使用表达式声明的函数是不会被提升的，不管函数是否具名；如：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">foo() <span class="comment">// Uncaught TypeError: foo is not a function</span></span><br><span class="line">bar() <span class="comment">// Uncaught ReferenceError: bar is not defined</span></span><br><span class="line"><span class="keyword">var</span> foo = <span class="function"><span class="keyword">function</span> <span class="title">bar</span> (<span class="params"></span>) </span>&#123;&#125;</span><br></pre></td></tr></table></figure>
+<p>虽然变量<span class="en-text"> foo </span>会被提升，但并未初始化，所以值是<span class="en-text"> undefined </span>，而对<span class="en-text"> undefined </span>进行函数调用是就会报错；</p>
+<h3 id="变量提升优先级"><a href="#变量提升优先级" class="headerlink" title="变量提升优先级"></a>变量提升优先级</h3><p>现在知道，函数声明和变量声明都会被提升，那要是声明的名称一样，那是如何处理的呢？</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">foo() <span class="comment">// 1</span></span><br><span class="line"><span class="keyword">var</span> foo;</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">foo</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="number">1</span>)</span><br><span class="line">&#125;</span><br><span class="line">foo = <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="number">2</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>输出的结果是 1；上面的代码，经过 JavaScript 引擎解析后为：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">foo</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="number">1</span>)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">foo() <span class="comment">// 1</span></span><br><span class="line"></span><br><span class="line">foo = <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="number">2</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>尽管<span class="en-text"> var </span>声明的<span class="en-text"> foo </span>变量在函数声明之前，但是因为重复的声明，所以被忽略了；因此<strong>函数声明会被提升到普通变量之前</strong>，所以函数声明的优先级更高。<br>最后，随着 ES6 的广泛应用，尽量使用<span class="en-text"> let、const </span>来声明变量，可以有效的避免<span class="en-text"> var </span>声明带来的变量提升及无块级作用域的影响，可以让我们更好的管理项目。</p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a href="https://tc39.es/ecma262/#sec-environment-records" target="_blank" rel="noopener">ECMAScript文档</a><br><a href="https://github.com/Advanced-Frontend/Daily-Interview-Question/issues/30" target="_blank" rel="noopener">关于 const 和 let 声明的变量不在 window 上</a><br><a href="https://github.com/Advanced-Frontend/Daily-Interview-Question/issues/133" target="_blank" rel="noopener">var、let 和 const 区别的实现原理是什么</a><br>《你不知道的JavaScript（上卷）》</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2020/05/17/JavaScript/JavaScript%E6%B7%B1%E6%B5%85%E6%8B%B7%E8%B4%9D/" rel="prev" title="JavaScript深浅拷贝">
+      <i class="fa fa-chevron-left"></i> JavaScript深浅拷贝
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let activeClass = CONFIG.comments.activeClass;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#导读"><span class="nav-number">1.</span> <span class="nav-text">导读</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#变量声明方式"><span class="nav-number">2.</span> <span class="nav-text">变量声明方式</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#var"><span class="nav-number">2.1.</span> <span class="nav-text">var</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#let"><span class="nav-number">2.2.</span> <span class="nav-text">let</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#const"><span class="nav-number">2.3.</span> <span class="nav-text">const</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#为什么const和let声明的变量不在window上"><span class="nav-number">2.4.</span> <span class="nav-text">为什么const和let声明的变量不在window上</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#小结"><span class="nav-number">2.5.</span> <span class="nav-text">小结</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#变量提升"><span class="nav-number">3.</span> <span class="nav-text">变量提升</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#变量提升优先级"><span class="nav-number">3.1.</span> <span class="nav-text">变量提升优先级</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考"><span class="nav-number">4.</span> <span class="nav-text">参考</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="zed"
+      src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">zed</p>
+  <div class="site-description" itemprop="description">欲望提升热忱，毅力磨平高山</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">13</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/CBCzed" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;CBCzed" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">zed</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v4.2.0
+  </div>
+  <span class="post-meta-divider">|</span>
+  <div class="theme-info">主题 – <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> v7.7.0
+  </div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>
