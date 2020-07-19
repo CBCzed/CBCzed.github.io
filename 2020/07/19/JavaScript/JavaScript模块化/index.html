@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    hostname: new URL('http://yoursite.com').hostname,
+    root: '/',
+    scheme: 'Gemini',
+    version: '7.7.0',
+    exturl: false,
+    sidebar: {"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},
+    copycode: {"enable":false,"show_result":false,"style":null},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":false},
+    bookmark: {"enable":false,"color":"#222","save":"auto"},
+    fancybox: false,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    comments: {"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},
+    algolia: {
+      appID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: '',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}
+  };
+</script>
+
+  <meta name="description" content="导读&amp;#12288;&amp;#12288;随着 ES6 的发展，模块化在项目中的运用越来越多，接触过模块化之后，相信大家都能感受到模块化给我们带来的优势，避免命名冲突、解耦代码、高复用性、高可维护性等；在 ES6 模块出现之前，社区中就有一些比较优秀的模块化的规范，如 CommonJS 、 AMD 、 CMD 等，甚至在更早时，为了使代码更佳的规范，也使用自执行函数 IIFE 或命名空间来规范代码，然而">
+<meta property="og:type" content="article">
+<meta property="og:title" content="JavaScript模块化">
+<meta property="og:url" content="http://yoursite.com/2020/07/19/JavaScript/JavaScript%E6%A8%A1%E5%9D%97%E5%8C%96/index.html">
+<meta property="og:site_name" content="JavaScript修炼">
+<meta property="og:description" content="导读&amp;#12288;&amp;#12288;随着 ES6 的发展，模块化在项目中的运用越来越多，接触过模块化之后，相信大家都能感受到模块化给我们带来的优势，避免命名冲突、解耦代码、高复用性、高可维护性等；在 ES6 模块出现之前，社区中就有一些比较优秀的模块化的规范，如 CommonJS 、 AMD 、 CMD 等，甚至在更早时，为了使代码更佳的规范，也使用自执行函数 IIFE 或命名空间来规范代码，然而">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2020-07-19T12:55:51.000Z">
+<meta property="article:modified_time" content="2020-07-19T13:35:32.859Z">
+<meta property="article:author" content="zed">
+<meta property="article:tag" content="JavaScript">
+<meta property="article:tag" content="博客">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://yoursite.com/2020/07/19/JavaScript/JavaScript%E6%A8%A1%E5%9D%97%E5%8C%96/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true
+  };
+</script>
+
+  <title>JavaScript模块化 | JavaScript修炼</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">JavaScript修炼</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+  </div>
+
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
+
+  </li>
+  </ul>
+
+</nav>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/07/19/JavaScript/JavaScript%E6%A8%A1%E5%9D%97%E5%8C%96/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="zed">
+      <meta itemprop="description" content="欲望提升热忱，毅力磨平高山">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="JavaScript修炼">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          JavaScript模块化
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2020-07-19 20:55:51 / 修改时间：21:35:32" itemprop="dateCreated datePublished" datetime="2020-07-19T20:55:51+08:00">2020-07-19</time>
+            </span>
+
+          
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="导读"><a href="#导读" class="headerlink" title="导读"></a>导读</h2><p>&#12288;&#12288;随着<span class="en-text"> ES6 </span>的发展，模块化在项目中的运用越来越多，接触过模块化之后，相信大家都能感受到模块化给我们带来的优势，避免命名冲突、解耦代码、高复用性、高可维护性等；在<span class="en-text"> ES6 </span>模块出现之前，社区中就有一些比较优秀的模块化的规范，如<span class="en-text"> CommonJS </span>、<span class="en-text"> AMD </span>、<span class="en-text"> CMD </span>等，甚至在更早时，为了使代码更佳的规范，也使用自执行函数 IIFE 或命名空间来规范代码，然而有些时候，我们只是看着用，但并没有去真正了解下如何用好模块化，本文将主要介绍<span class="en-text"> CommonJS </span>、<span class="en-text"> ES6 </span>规范。</p>
+<a id="more"></a>
+
+<h2 id="CommonJS"><a href="#CommonJS" class="headerlink" title="CommonJS"></a>CommonJS</h2><p>相信用过<span class="en-text"> Node </span>的小伙伴们，对<span class="en-text"> CommonJS </span>一定不会陌生，<span class="en-text"> Node </span>就是遵循<span class="en-text"> CommonJS </span>规范来开发的。但随着<span class="en-text"> ES6 </span>模块化的实现，<span class="en-text"> Node </span>在 v13.2 版本开始，默认打开对<span class="en-text"> ES6 </span>的方式支持，只不过文件名的格式需要使用<span class="en-text"> .mjs </span>后缀。<br><span class="en-text"> CommonJS </span> 规范认为，每个文件就是一个模块，有自己单独的作用域；在一个文件里面定义的变量、函数、类，都是私有的，对其他文件不可见；每个模块内部，<span class="en-text"> module </span>变量代表当前模块，这个变量是一个对象，它的<span class="en-text"> exports </span>属性（即<span class="en-text"> module.exports </span>）是对外唯一的接口。使用<span class="en-text"> require </span>命令加载某个模块时，其实是加载该模块的<span class="en-text"> module.exports </span>属性。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">* exampleA.js</span></span><br><span class="line"><span class="comment">* */</span></span><br><span class="line"><span class="keyword">const</span> NAME = <span class="string">'CommonJS'</span></span><br><span class="line"><span class="keyword">const</span> getName = <span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">  <span class="built_in">console</span>.log(NAME)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">* 在 node 中，可能会看到使用 exports 导出变量，exports 其实只 module.exports 的一个引用</span></span><br><span class="line"><span class="comment">* */</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">module</span>.exports = &#123;</span><br><span class="line">  getName</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">* exampleB.js 中引入使用</span></span><br><span class="line"><span class="comment">* */</span></span><br><span class="line"><span class="keyword">const</span> exampleA = <span class="built_in">require</span>(<span class="string">'./exampleA.js'</span>)</span><br><span class="line">exampleA.getName() <span class="comment">// CommonJS</span></span><br></pre></td></tr></table></figure>
+<p>以上便是简单的一个<span class="en-text"> CommonJS </span>的 demo，最重要的其实是：</p>
+<ul>
+<li>使用<span class="en-text"> module </span>对象描述模块信息及对外暴露接口；</li>
+<li>使用<span class="en-text"> require </span>命令引入模块后使用；</li>
+</ul>
+<h3 id="module对象"><a href="#module对象" class="headerlink" title="module对象"></a>module对象</h3><p>在<span class="en-text"> Node </span>内部提供一个<span class="en-text"> Module </span>构建函数，所有模块都是<span class="en-text"> Module </span>的实例，实例包含以下属性：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">module &#123;</span><br><span class="line">  id: <span class="string">'.'</span>, 模块标识符，通常是带有绝对路径的模块文件名</span><br><span class="line">  path: <span class="string">'/Users/chenbocai/Documents/myproject/IdeaProjects/project/js_learn/node'</span>, // 模块文件所在位置的路径</span><br><span class="line">  exports: &#123;&#125;, // 对外暴露的接口</span><br><span class="line">  parent: null, // 返回一个对象，表示调用该模块的模块，如上例子 exampleB 引用 exampleA，则 exampleA 的 parent 就指向 exampleB</span><br><span class="line">  filename: <span class="string">'/Users/chenbocai/Documents/myproject/IdeaProjects/project/js_learn/node/module1.js'</span>, // 模块完全解析后的文件名。</span><br><span class="line">  loaded: <span class="literal">false</span>, // 模块是否加载完成，<span class="literal">true</span> 为加载完成，<span class="literal">false</span> 则相反</span><br><span class="line">  children: [], // 返回一个数组，表示被该模块引用的模块对象</span><br><span class="line">  paths: [ // 返回一个数组，表示模块可搜索的路径</span><br><span class="line">    <span class="string">'/Users/chenbocai/Documents/myproject/IdeaProjects/project/js_learn/node/node_modules'</span>,</span><br><span class="line">    <span class="string">'/Users/chenbocai/Documents/myproject/IdeaProjects/project/js_learn/node_modules'</span>,</span><br><span class="line">    <span class="string">'/Users/chenbocai/Documents/myproject/IdeaProjects/project/node_modules'</span>,</span><br><span class="line">    <span class="string">'/Users/chenbocai/Documents/myproject/IdeaProjects/node_modules'</span>,</span><br><span class="line">    <span class="string">'/Users/chenbocai/Documents/myproject/node_modules'</span>,</span><br><span class="line">    <span class="string">'/Users/chenbocai/Documents/node_modules'</span>,</span><br><span class="line">    <span class="string">'/Users/chenbocai/node_modules'</span>,</span><br><span class="line">    <span class="string">'/Users/node_modules'</span>,</span><br><span class="line">    <span class="string">'/node_modules'</span></span><br><span class="line">  ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>以上属性中，我们最常用的就是<span class="en-text"> module.exports </span>这个属性，使用该属性，对外暴露想要暴露的接口，在<span class="en-text"> Node </span>中，为了方便使用，特别提供了<span class="en-text"> exports </span>变量来指向<span class="en-text"> module.exports </span>，但是在模块中不能给<span class="en-text"> exports </span>重新赋值，否则<span class="en-text"> exports </span>与<span class="en-text"> module.exports </span>的引用关系将会解除。</p>
+<h3 id="require命令"><a href="#require命令" class="headerlink" title="require命令"></a>require命令</h3><p><span class="en-text"> require </span>命令用于引入模块、 JSON、或本地文件，然后返回该模块的<span class="en-text"> exports </span>对象，使用方法为，<span class="en-text"> require(id) </span>，<span class="en-text"> id </span>为模块名称路径，其加载规则为，当<span class="en-text"> id </span>为模块名称时，则相应的会从<span class="en-text"> node_modules </span>目录下加载模块，若是路径，则会按照路径来引入模块或文件；<br><span class="en-text"> require </span>命令并不是全局的，当调用时，其指向的是<span class="en-text"> module.require </span>，而<span class="en-text"> module.require </span>指向的是<span class="en-text"> Node </span>的内部命令<span class="en-text"> Module._load </span>；<br>在<span class="en-text"> Node </span>中，<span class="en-text"> require </span>还包含以下属性：</p>
+<ul>
+<li><span class="en-text"> require.cache </span>是一个对象，所有被引入的模块都将缓存在这个数组里，对象的<span class="en-text"> key </span>为模块的路径，<span class="en-text"> value </span>为<span class="en-text"> module </span>对象，若需要清除缓存，则要删除该对象；</li>
+<li><span class="en-text"> require.resolve(request[, options])</span>是一个方法，<span class="en-text"> path </span>表示需要解析的模块路径，可选参数<span class="en-text"> options </span>对象包含<span class="en-text"> paths </span>属性，<span class="en-text"> paths </span>数组表示解析模块位置的路径，若存在值，则会覆盖默认的解析路径；该方法最终返回解析后的文件名，<strong>但不会加载该模块</strong>；</li>
+<li><span class="en-text"> require.main </span>是一个<span class="en-text"> module </span>对象，表示当<span class="en-text"> Node </span>进程启动时加载的入口脚本</li>
+<li><span class="en-text"> require.extensions </span>是一个扩展对象，表示如何处理这些文件的扩展名，该属性已经废弃（但是打印<span class="en-text"> require </span>时仍旧可以看到该属性）<br>一旦<span class="en-text"> require </span>函数准备完成，整个快的代码，会被放到一个全新的函数之中，通过函数作用域，避免污染全局环境，该函数如下:<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">(<span class="function"><span class="keyword">function</span> (<span class="params">exports, require, module, __filename, __dirname</span>) </span>&#123;</span><br><span class="line">  <span class="comment">/**</span></span><br><span class="line"><span class="comment">  * 这里存放，模块文件的所有 js 代码</span></span><br><span class="line"><span class="comment">  * */</span></span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<h3 id="特点"><a href="#特点" class="headerlink" title="特点"></a>特点</h3><p><span class="en-text"> CommonJS </span>规范有以下几个特点：</p>
+<p>1.所有代码都运行在模块作用域，不会污染全局作用域；<br>这一点相信大家都能理解，这也是模块的规范，模块的代码都是私有的，且只有通过<span class="en-text"> module.exports </span>暴露接口才可以被访问，并且<span class="en-text"> this </span>对象指向该模块；</p>
+<p>2.模块可以多次加载，但是只会在第一次加载时运行一次，然后运行结果就被缓存了，以后再加载，就直接读取缓存结果。要想让模块再次运行，必须清除缓存；<br>这一点，其实就是<span class="en-text"> CommonJS </span>模块的<strong><em>加载原理</em></strong>，借助最开始的例子说明：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> exampleA = <span class="built_in">require</span>(<span class="string">'./exampleA.js'</span>)</span><br><span class="line"><span class="built_in">require</span>(<span class="string">'./exampleA.js'</span>).message = <span class="string">'Hello CommonJS'</span></span><br><span class="line"><span class="built_in">console</span>.log(<span class="built_in">require</span>(<span class="string">'./exampleA.js'</span>).message) <span class="comment">// Hello CommonJS</span></span><br></pre></td></tr></table></figure>
+<p>如上的代码，打印的结果是 Hello CommonJS，由此便验证模块只会加载一次，之后的便都会从缓存中获取模块信息；<br>模块的<strong>循环加载</strong>的解决方式，其实也是依赖于缓存，具体的例子，可以查看<a href="https://nodejs.org/api/modules.html#modules_cycles" target="_blank" rel="noopener">Node 官方文档</a></p>
+<p>3.模块加载为同步加载方式，这也就是<span class="en-text"> CommonJS </span>不适用于浏览器端的主要原因；<br>4.模块加载的顺序，按照其在代码中出现的顺序<br>后面这两点就比较好理解了，模块的是同步加载，如是在浏览器端使用，则会因为等待时间过长而导致用户体验不好，而在服务端，数据都是存储在硬盘中，所以加载速度就比较快；当然，社区中有人开发了<span class="en-text"> browserify </span>库，使得浏览器端使用<span class="en-text"> CommonJS </span>变成了可能。</p>
+<h3 id="加载机制"><a href="#加载机制" class="headerlink" title="加载机制"></a>加载机制</h3><p><span class="en-text"> require </span>命令引入的是模块的<span class="en-text"> exports </span>对象，在<span class="en-text"> CommonJS </span>中，模块的加载机制是，输入的是被输出的值的拷贝；也就是说，一旦输出一个值，模块内部的变化就影响不到这个值；<br>借助以下 demo 说明:</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">* module1.js</span></span><br><span class="line"><span class="comment">* */</span></span><br><span class="line"><span class="keyword">let</span> counter = <span class="number">1</span></span><br><span class="line"><span class="keyword">const</span> increaseCounter = <span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">  counter++</span><br><span class="line">&#125;</span><br><span class="line"><span class="built_in">module</span>.exports = &#123;</span><br><span class="line">  counter,</span><br><span class="line">  increaseCounter</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">* module2.js</span></span><br><span class="line"><span class="comment">* */</span></span><br><span class="line"><span class="keyword">const</span> mod = <span class="built_in">require</span>(<span class="string">'./module1'</span>)</span><br><span class="line"><span class="built_in">console</span>.log(mod.counter) <span class="comment">// 1</span></span><br><span class="line">increaseCounter()</span><br><span class="line"><span class="built_in">console</span>.log(mod.counter) <span class="comment">// 1</span></span><br></pre></td></tr></table></figure>
+<p>如上代码，当<span class="en-text"> module1.js </span>代码被加载之后，执行了<span class="en-text"> increaseCounter </span>方法，然而<span class="en-text"> counter </span>依旧不变，所以当模块加载完毕后，它的内部变化就影响不到输出的<span class="en-text"> mod.counter </span>。</p>
+<h2 id="ES6-module"><a href="#ES6-module" class="headerlink" title="ES6 module"></a>ES6 module</h2><p><span class="en-text"> ES6 </span>模块化的规范实现很简单，就是两个<span class="en-text"> API </span>，<span class="en-text"> import </span>导入及<span class="en-text"> export </span>导出；由于<span class="en-text"> ES6 </span>的模块默认采用严格模式，所以在开发模块时要注意严格模式的限制，严格模式的限制如下：</p>
+<ul>
+<li>变量必须声明后再使用</li>
+<li>函数的参数不能有同名属性，否则报错</li>
+<li>不能使用<span class="en-text"> with </span>语句</li>
+<li>不能对只读属性赋值，否则报错</li>
+<li>不能使用前缀 0 表示八进制数，否则报错</li>
+<li>不能删除不可删除的属性，否则报错</li>
+<li>不能删除变量<span class="en-text"> delete prop </span>，会报错，只能删除属性<span class="en-text"> delete global[prop] </span></li>
+<li><span class="en-text"> eval </span>不会在它的外层作用域引入变量</li>
+<li><span class="en-text"> eval </span>和<span class="en-text"> arguments </span>不能被重新赋值</li>
+<li><span class="en-text"> arguments </span>不会自动反映函数参数的变化</li>
+<li>不能使用<span class="en-text"> arguments.callee </span></li>
+<li>不能使用<span class="en-text"> arguments.caller </span></li>
+<li>禁止<span class="en-text"> this </span>指向全局对象</li>
+<li>不能使用<span class="en-text"> arguments.callee </span>和<span class="en-text"> fn.arguments </span>获取函数调用的堆栈</li>
+<li>增加了保留字（比如<span class="en-text"> protected </span>、<span class="en-text"> static </span>和<span class="en-text"> interface </span>）</li>
+</ul>
+<p><span class="en-text"> ES6 </span>模块的设计思想是尽量的静态化，使得编译时就能确定模块的依赖关系，以及输入和输出的变量；<span class="en-text"> CommonJS </span>只能在运行时确定这些东西。比如<span class="en-text"> CommonJS </span>模块就是对象，输入时必须查找对象属性；而<span class="en-text"> ES6 </span>模块不是对象，而是通过<span class="en-text"> export </span>命令显式指定导出的代码，再通过<span class="en-text"> import </span>命令导入；由于是编译时加载，不仅效率比<span class="en-text"> CommonJS </span>高，也使得静态分析成为了可能，但由于目前个浏览器对<span class="en-text"> ES6 </span>模块的支持度还不是很友好，所以还需要通过 Babel 等转译工具进行编译。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">* export.js</span></span><br><span class="line"><span class="comment">* */</span></span><br><span class="line"><span class="comment">// 方式一</span></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">const</span> NAME = <span class="string">'ES6 module'</span></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">const</span> getName = <span class="function"><span class="params">()</span> =&gt;</span> NAME</span><br><span class="line"></span><br><span class="line"><span class="comment">// 方式二</span></span><br><span class="line"><span class="keyword">const</span> NAME = <span class="string">'ES6 module'</span></span><br><span class="line"><span class="keyword">const</span> getName = <span class="function"><span class="params">()</span> =&gt;</span> NAME</span><br><span class="line"><span class="keyword">export</span> &#123; NAME, getName &#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">* import.js</span></span><br><span class="line"><span class="comment">* */</span></span><br><span class="line"><span class="keyword">import</span> &#123; NAME, getName &#125; <span class="keyword">from</span> <span class="string">'./export.js'</span></span><br><span class="line"><span class="keyword">const</span> name = getName()</span><br><span class="line"><span class="built_in">console</span>.log(name) <span class="comment">// ES6 module</span></span><br></pre></td></tr></table></figure>
+<p>以上就是简单的<span class="en-text"> ES6 </span>模块化例子，导出的方式有两种，个人比较建议使用方式二，这样可以更佳清晰的查看导出的数据。</p>
+<h3 id="export命令"><a href="#export命令" class="headerlink" title="export命令"></a>export命令</h3><p><span class="en-text"> export </span>命令用于规定模块暴露的接口；外部文件只能通过暴露的接口来访问模块的数据；<br>使用<span class="en-text"> export </span>导出接口时，也可以通过<span class="en-text"> as </span>关键只为接口重命名；</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">* export.js</span></span><br><span class="line"><span class="comment">* */</span></span><br><span class="line"><span class="keyword">const</span> NAME = <span class="string">'ES6 module'</span></span><br><span class="line"><span class="keyword">const</span> getName = <span class="function"><span class="params">()</span> =&gt;</span> NAME</span><br><span class="line"><span class="keyword">export</span> &#123;</span><br><span class="line">  NAME <span class="keyword">as</span> ESNAME,</span><br><span class="line">  getName <span class="keyword">as</span> getModuleName,</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">* import.js</span></span><br><span class="line"><span class="comment">* */</span></span><br><span class="line"><span class="keyword">import</span> &#123; ESNAME, getModuleName &#125; <span class="keyword">from</span> <span class="string">'./export'</span></span><br><span class="line"><span class="keyword">const</span> name = getModuleName()</span><br><span class="line"><span class="built_in">console</span>.log(name) <span class="comment">// ES6 module</span></span><br></pre></td></tr></table></figure>
+<p><span class="en-text"> export </span>导出的接口，与其对应的值是动态绑定关系，即通过该接口，可以取到模块内部实时的值，这一点与<span class="en-text"> CommonJS </span>有很大的区别。<br><span class="en-text"> export </span>语句可以在文件顶层任意使用，但不能在其它块语句内使用；</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span>(<span class="literal">true</span>) &#123;</span><br><span class="line">  <span class="keyword">export</span> &#123; <span class="comment">// interface&#125;</span></span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">  <span class="keyword">export</span> &#123; <span class="comment">// interface &#125;</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">exportInterFace</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">export</span> &#123; <span class="comment">// interface &#125;</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>以上的导出，都将会报语法错误。</p>
+<h3 id="export-default命令"><a href="#export-default命令" class="headerlink" title="export default命令"></a>export default命令</h3><p><span class="en-text"> export default </span>语句，为模块指定默认的导出，且每个模块文件只能有一个默认导出；<span class="en-text"> export default</span>命令，其实相当就是为<span class="en-text"> default </span>这个变量赋值；</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">* export_default.js</span></span><br><span class="line"><span class="comment">* */</span></span><br><span class="line"><span class="comment">// 默认导出一个函数</span></span><br><span class="line"><span class="keyword">export</span> defalut () =&gt; &#123;&#125;</span><br><span class="line"><span class="comment">// 或默认导出变量</span></span><br><span class="line"><span class="keyword">const</span> NAME = <span class="string">'ES module'</span></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> NAME</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">* import.js</span></span><br><span class="line"><span class="comment">* 使用 export default 导出的变量，在导入时不需要加 &#123;&#125;</span></span><br><span class="line"><span class="comment">* */</span></span><br><span class="line"><span class="keyword">import</span> name <span class="keyword">from</span> <span class="string">'./export-default'</span> <span class="comment">// 导入的变量可以任意取名</span></span><br><span class="line"><span class="built_in">console</span>.log(name) <span class="comment">// ES module</span></span><br></pre></td></tr></table></figure>
+<p>在<span class="en-text"> react </span>中我们常常会看到：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> React, &#123; useState &#125; <span class="keyword">from</span> <span class="string">'react'</span></span><br></pre></td></tr></table></figure>
+<p>这就是<span class="en-text"> export default </span>与<span class="en-text"> export </span>命令的结合使用，默认导出<span class="en-text"> React </span>，其它方法可以单独引入；</p>
+<h3 id="import命令"><a href="#import命令" class="headerlink" title="import命令"></a>import命令</h3><p><span class="en-text"> import </span>命令用于导入模块，且只会加载所导入的方法，其余模块的方法不会加载；且如果从同一模块中导入多次，最终也只会执行一次。<br>与<span class="en-text"> export </span>一样，用<span class="en-text"> import </span>时，也可以使用<span class="en-text"> as </span>关键字为导入的接口重命名；</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">* export.js</span></span><br><span class="line"><span class="comment">* */</span></span><br><span class="line"><span class="keyword">const</span> NAME = <span class="string">'ES6 module'</span></span><br><span class="line"><span class="keyword">const</span> getName = <span class="function"><span class="params">()</span> =&gt;</span> NAME</span><br><span class="line"><span class="keyword">export</span> &#123; NAME, getName &#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">* import.js</span></span><br><span class="line"><span class="comment">* */</span></span><br><span class="line"><span class="keyword">import</span> &#123; NAME <span class="keyword">as</span> ESNAME, getName <span class="keyword">as</span> getModuleName &#125; <span class="keyword">from</span> <span class="string">'./export'</span></span><br><span class="line"><span class="keyword">const</span> name = getModuleName()</span><br><span class="line"><span class="built_in">console</span>.log(name) <span class="comment">// ES6 module</span></span><br></pre></td></tr></table></figure>
+<p><span class="en-text"> import </span>命令支持整体加载，而不用一个一个的导入；</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> * <span class="keyword">as</span> <span class="built_in">module</span> <span class="keyword">from</span> <span class="string">'./export'</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">console</span>.log(<span class="built_in">module</span>.NAME) <span class="comment">// ES6 module</span></span><br><span class="line"><span class="built_in">console</span>.log(<span class="built_in">module</span>.getName()) <span class="comment">// ES6 module</span></span><br></pre></td></tr></table></figure>
+<p><span class="en-text"> import </span>导入的变量都是只读的，所以不可以对变量本身进行操作，但若导入的变量是对象类型的，则可以对其属性进行操作；</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; xxx &#125; <span class="keyword">from</span> <span class="string">'./xxx.js'</span></span><br><span class="line">xxx = &#123;&#125; <span class="comment">// Syntax Error : 'a' is read-only;</span></span><br><span class="line"></span><br><span class="line">xxx.name = <span class="string">'ES module'</span> <span class="comment">// 合法操作</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="export-与-import-的复合写法"><a href="#export-与-import-的复合写法" class="headerlink" title="export 与 import 的复合写法"></a>export 与 import 的复合写法</h3><p>如果在一个模块之中，先输入后输出同一个模块，<span class="en-text"> import </span>语句可以与<span class="en-text"> export </span>语句是可以合并的；</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">* demo.js</span></span><br><span class="line"><span class="comment">* */</span></span><br><span class="line"><span class="keyword">export</span> &#123; NAME, getName &#125; <span class="keyword">from</span> <span class="string">'xxx.js'</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 相当于</span></span><br><span class="line"><span class="keyword">import</span> &#123; NAME, getName &#125; <span class="keyword">from</span> <span class="string">'xxx.js'</span></span><br><span class="line"><span class="keyword">export</span> &#123; NAME, getName &#125;</span><br></pre></td></tr></table></figure>
+<p>需要注意的一点是，当语句合并后，demo.js 这个模块只是相当于对外转发了这两个接口，但不能使用，会直接报错变量未定义</p>
+<h3 id="动态加载-import-函数"><a href="#动态加载-import-函数" class="headerlink" title="动态加载 import() 函数"></a>动态加载 import() 函数</h3><p><span class="en-text"> import </span>命令是在编译时运行，且只能在顶层声明，这就限制了动态加载模块的功能，所以 ES2020 引入了<span class="en-text"> import() </span>函数，用于动态加载模块，且无需在顶层也可以运用；<br><span class="en-text"> import() </span>函数为异步加载，返回一个<span class="en-text"> Promise </span>对象；</p>
+<pre><code class="javascript"><span class="keyword">import</span>(<span class="string">`./xxx.js`</span>)
+  .then(<span class="function"><span class="params">module</span> =&gt;</span> {
+    <span class="comment">// module 为模块文件返回的结果</span>
+  })
+  .catch(<span class="function"><span class="params">err</span> =&gt;</span> {
+
+  })</code></pre>
+<p><span class="en-text"> import() </span>函数常用于按需加载、条件加载、动态的模块路径等，像<span class="en-text"> Vue </span>、<span class="en-text"> React </span>路由的按需加载就是使用该函数实现的。</p>
+<h3 id="加载机制-1"><a href="#加载机制-1" class="headerlink" title="加载机制"></a>加载机制</h3><p><span class="en-text"> ES6 </span>模块加载与<span class="en-text"> CommonJS </span>有着本质的不同，<span class="en-text"> ES6 import</span>加载的是对模块的动态引用，所以当模块内部发生变化时，都可以获取到变量的最新数据；这也是<span class="en-text"> ES6 </span>模块的<strong><em>循环加载</em></strong>的解决方式；只要在引用模块时确保变量已经定义了即可。</p>
+<h2 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h2><p><span class="en-text"> ES6 </span>模块与<span class="en-text"> CommonJS </span>模块存在本质上的不同，主要有以下两个大的差异：</p>
+<ul>
+<li><span class="en-text"> CommonJS </span>模块输出的是一个值的拷贝，<span class="en-text"> ES6 </span>模块输出的是值的引用。</li>
+<li><span class="en-text"> CommonJS </span>模块是运行时加载，<span class="en-text"> ES6 </span>模块是编译时输出接口</li>
+</ul>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a href="https://javascript.ruanyifeng.com/nodejs/module.html#toc5" target="_blank" rel="noopener">CommonJS规范</a><br><a href="https://es6.ruanyifeng.com/#docs/module" target="_blank" rel="noopener">ES6 module</a></p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2020/06/07/JavaScript/JavaScript%E5%8F%98%E9%87%8F%E5%A3%B0%E6%98%8E%E4%B8%8E%E6%8F%90%E5%8D%87/" rel="prev" title="JavaScript变量声明与提升">
+      <i class="fa fa-chevron-left"></i> JavaScript变量声明与提升
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let activeClass = CONFIG.comments.activeClass;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#导读"><span class="nav-number">1.</span> <span class="nav-text">导读</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#CommonJS"><span class="nav-number">2.</span> <span class="nav-text">CommonJS</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#module对象"><span class="nav-number">2.1.</span> <span class="nav-text">module对象</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#require命令"><span class="nav-number">2.2.</span> <span class="nav-text">require命令</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#特点"><span class="nav-number">2.3.</span> <span class="nav-text">特点</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#加载机制"><span class="nav-number">2.4.</span> <span class="nav-text">加载机制</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ES6-module"><span class="nav-number">3.</span> <span class="nav-text">ES6 module</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#export命令"><span class="nav-number">3.1.</span> <span class="nav-text">export命令</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#export-default命令"><span class="nav-number">3.2.</span> <span class="nav-text">export default命令</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#import命令"><span class="nav-number">3.3.</span> <span class="nav-text">import命令</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#export-与-import-的复合写法"><span class="nav-number">3.4.</span> <span class="nav-text">export 与 import 的复合写法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#动态加载-import-函数"><span class="nav-number">3.5.</span> <span class="nav-text">动态加载 import() 函数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#加载机制-1"><span class="nav-number">3.6.</span> <span class="nav-text">加载机制</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#小结"><span class="nav-number">4.</span> <span class="nav-text">小结</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考"><span class="nav-number">5.</span> <span class="nav-text">参考</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="zed"
+      src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">zed</p>
+  <div class="site-description" itemprop="description">欲望提升热忱，毅力磨平高山</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">14</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/CBCzed" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;CBCzed" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">zed</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v4.2.0
+  </div>
+  <span class="post-meta-divider">|</span>
+  <div class="theme-info">主题 – <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> v7.7.0
+  </div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>
