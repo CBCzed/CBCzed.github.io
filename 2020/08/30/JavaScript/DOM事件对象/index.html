@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    hostname: new URL('http://yoursite.com').hostname,
+    root: '/',
+    scheme: 'Gemini',
+    version: '7.7.0',
+    exturl: false,
+    sidebar: {"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},
+    copycode: {"enable":false,"show_result":false,"style":null},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":false},
+    bookmark: {"enable":false,"color":"#222","save":"auto"},
+    fancybox: false,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    comments: {"style":"tabs","active":"valine","storage":true,"lazyload":false,"nav":null,"activeClass":"valine"},
+    algolia: {
+      appID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: '',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}
+  };
+</script>
+
+  <meta name="description" content="导读&amp;#12288;&amp;#12288;本文主要是对 JavaScript 的 DOM 对象做一次记录，知识点包括事件的定义、DOM 事件级别、DOM 事件模型与事件流、事件的绑定与移除、事件对象及事件委托">
+<meta property="og:type" content="article">
+<meta property="og:title" content="DOM事件对象">
+<meta property="og:url" content="http://yoursite.com/2020/08/30/JavaScript/DOM%E4%BA%8B%E4%BB%B6%E5%AF%B9%E8%B1%A1/index.html">
+<meta property="og:site_name" content="JavaScript修炼">
+<meta property="og:description" content="导读&amp;#12288;&amp;#12288;本文主要是对 JavaScript 的 DOM 对象做一次记录，知识点包括事件的定义、DOM 事件级别、DOM 事件模型与事件流、事件的绑定与移除、事件对象及事件委托">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2020-08-30T02:29:44.563Z">
+<meta property="article:modified_time" content="2020-08-30T02:29:44.563Z">
+<meta property="article:author" content="zed">
+<meta property="article:tag" content="JavaScript">
+<meta property="article:tag" content="博客">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://yoursite.com/2020/08/30/JavaScript/DOM%E4%BA%8B%E4%BB%B6%E5%AF%B9%E8%B1%A1/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true
+  };
+</script>
+
+  <title>DOM事件对象 | JavaScript修炼</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">JavaScript修炼</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+  </div>
+
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
+
+  </li>
+  </ul>
+
+</nav>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/08/30/JavaScript/DOM%E4%BA%8B%E4%BB%B6%E5%AF%B9%E8%B1%A1/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="zed">
+      <meta itemprop="description" content="欲望提升热忱，毅力磨平高山">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="JavaScript修炼">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          DOM事件对象
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-08-30 10:29:44" itemprop="dateCreated datePublished" datetime="2020-08-30T10:29:44+08:00">2020-08-30</time>
+            </span>
+
+          
+            <span id="/2020/08/30/JavaScript/DOM%E4%BA%8B%E4%BB%B6%E5%AF%B9%E8%B1%A1/" class="post-meta-item leancloud_visitors" data-flag-title="DOM事件对象" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="fa fa-comment-o"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2020/08/30/JavaScript/DOM%E4%BA%8B%E4%BB%B6%E5%AF%B9%E8%B1%A1/#comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2020/08/30/JavaScript/DOM%E4%BA%8B%E4%BB%B6%E5%AF%B9%E8%B1%A1/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="导读"><a href="#导读" class="headerlink" title="导读"></a>导读</h2><p>&#12288;&#12288;本文主要是对 JavaScript 的 DOM 对象做一次记录，知识点包括事件的定义、DOM 事件级别、DOM 事件模型与事件流、事件的绑定与移除、事件对象及事件委托</p>
+<a id="more"></a>
+<h2 id="事件"><a href="#事件" class="headerlink" title="事件"></a>事件</h2><p>事件本身并不是一个需要定义的技术名词。简而言之，事件就是文档或浏览器通知应用程序发生了什么事情；<span class="en-text">JavaScript</span>与<span class="en-text">HTML</span>之间的交互就是通过事件来实现的。<br>在 HTML 中，元素是自带事件的，不论我们是否给元素绑定函数，都会触发事件。</p>
+<h2 id="事件级别"><a href="#事件级别" class="headerlink" title="事件级别"></a>事件级别</h2><p>到目前为止，<span class="en-text">DOM</span>事件有五个级别，分别为：<span class="en-text">DOM 0</span>级、<span class="en-text">DOM 1</span>级、<span class="en-text">DOM 2</span>级、<span class="en-text">DOM 3</span>级、<span class="en-text">DOM 4</span>级，但目前<span class="en-text">DOM 4</span>级还处于草案阶段，还没有成为真正的标准。</p>
+<h3 id="DOM-0级"><a href="#DOM-0级" class="headerlink" title="DOM 0级"></a>DOM 0级</h3><p><span class="en-text">DOM 0</span>级是 JavaScript 指定事件处理程序的传统方式，通过将函数赋值给事件处理程序的属性；其使用方式有两种如下：</p>
+<ul>
+<li>行内事件：给标签中的事件属性直接赋值</li>
+<li>元素.on事件名=函数<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!-- 方式一 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">button</span> <span class="attr">type</span>=<span class="string">"button"</span> <span class="attr">onclick</span>=<span class="string">"alert('Hello World')"</span>&gt;</span>行内事件<span class="tag">&lt;/<span class="name">button</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">&lt;!-- 方式二 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">button</span> <span class="attr">type</span>=<span class="string">"button"</span> <span class="attr">id</span>=<span class="string">"btn"</span>&gt;</span>Button<span class="tag">&lt;/<span class="name">button</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="javascript">  <span class="keyword">const</span> btn = <span class="built_in">document</span>.getElementById(<span class="string">'btn'</span>)</span></span><br><span class="line"><span class="actionscript">  btn.onclick = <span class="function"><span class="keyword">function</span><span class="params">()</span> </span>&#123;</span></span><br><span class="line"><span class="actionscript">    <span class="comment">// do something</span></span></span><br><span class="line"><span class="actionscript">    alert(<span class="string">'Hello World'</span>)</span></span><br><span class="line">  &#125;</span><br><span class="line"><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<h3 id="DOM-1级"><a href="#DOM-1级" class="headerlink" title="DOM 1级"></a>DOM 1级</h3><p>其实在事件方面是不存在<span class="en-text">DOM 1</span>级事件的，W3C 组织在制定<span class="en-text">DOM 1</span>级标准时并没有定义关于事件的相关内容；<span class="en-text">DOM 1</span>级主要是定义了 HTML 和 XML 文档的底层结构。所以并没有<span class="en-text">DOM 1</span>级事件的相关定义，但是在面试时，有些面试官就会在这里挖坑。</p>
+<h3 id="DOM-2级"><a href="#DOM-2级" class="headerlink" title="DOM 2级"></a>DOM 2级</h3><p><span class="en-text">DOM 2</span>级新增了两个事件处理程序的方法，分别是用来注册和移除事件的<span class="en-text">addEventListener</span>和<span class="en-text">removeEventListener</span>；</p>
+<h3 id="DOM-3级"><a href="#DOM-3级" class="headerlink" title="DOM 3级"></a>DOM 3级</h3><p><span class="en-text">DOM 3</span>级，主要是新增了一些不同的事件类型及自定义事件，新增的事件类型如下：</p>
+<ul>
+<li>UI 事件，当用户与页面上的元素交互时触发，事件类型有：load、unload、abort、error、select</li>
+<li>焦点事件，当元素获得或失去焦点是触发，事件类型有：blur、focus、focusin、focusout</li>
+<li>鼠标事件，用户在页面上使用鼠标点击时触发，事件类型有：click、dbclick、mousedown、mouseenter、mouseleave、mousemove、mouseout、mouseover、mouseup</li>
+<li>鼠标滚轮事件，当用户使用鼠标滚轮操作时触发，事件类型有：wheel</li>
+<li>文本事件，当用户在文本框输入文本时触发，事件类型有：beforeinput、input</li>
+<li>键盘事件，用户通过键盘操作时触发，事件类型有：keydown、keyup</li>
+<li>合成事件，当 IME(Input Method Editor 输入方法编辑器)输入字符时，触发，<a href="https://www.w3.org/TR/ime-api/" target="_blank" rel="noopener">更多关于IME</a>，事件类型有：compositionstart、compositionupdate、compositionend</li>
+<li>变动事件，当 DOM 结构发生变化时触发，事件类型有：DOMSubtreeModified、DOMNodeInserted、DOMNodeRemoved、DOMNodeInsertedIntoDocument、DOMNodeRemovedFromDocument、DOMAttrModified、DOMCharacterDataModified</li>
+</ul>
+<p>以上事件类型中 blur、focus、mouseenter、mouseleave 是无冒泡的，也就是说事件是在捕获时触发</p>
+<p>自定义事件需要使用<span class="en-text">Event</span>或<span class="en-text">CustomEvent</span>来构造，使用<span class="en-text">dispatchEvent</span>来触发事件，其构造格式分别如下：</p>
+<ul>
+<li>Event(‘事件名’)</li>
+<li>CustomEvent(‘事件名’, {detail: {}, bubbles: Boolean), cancelable: Boolean})，<span class="en-text">detail</span>表示接收自定义传递的参数，<span class="en-text">bubbles</span>表示事件是否可以冒泡，<span class="en-text">cancelable</span>表示事件是否可以取消<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">button</span> <span class="attr">type</span>=<span class="string">"button"</span> <span class="attr">id</span>=<span class="string">"btn"</span>&gt;</span>Button<span class="tag">&lt;/<span class="name">button</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="javascript"><span class="keyword">const</span> el = <span class="built_in">document</span>.getElementById(<span class="string">'btn'</span>)</span></span><br><span class="line"><span class="actionscript"><span class="comment">// Event</span></span></span><br><span class="line"><span class="javascript"><span class="keyword">let</span> eve = <span class="keyword">new</span> Event(<span class="string">'custom'</span>)</span></span><br><span class="line"><span class="actionscript">el.addEventListener(<span class="string">'custom'</span>, <span class="function"><span class="keyword">function</span><span class="params">()</span></span>&#123;&#125;)</span></span><br><span class="line"><span class="actionscript">el.dispatchEvent(eve) <span class="comment">// 触发事件</span></span></span><br><span class="line"></span><br><span class="line"><span class="actionscript"><span class="comment">// CustomEvent</span></span></span><br><span class="line"><span class="javascript"><span class="keyword">let</span> eve = <span class="keyword">new</span> CustomEvent(<span class="string">'custom'</span>, &#123;<span class="attr">detail</span>: &#123;<span class="attr">name</span>: <span class="string">'CustomEvent'</span>&#125;&#125;)</span></span><br><span class="line"><span class="actionscript">el.addEventListener(<span class="string">'custom'</span>, <span class="function"><span class="keyword">function</span><span class="params">(e)</span></span>&#123;</span></span><br><span class="line"><span class="javascript">  <span class="built_in">console</span>.log(e.detail) <span class="comment">// 这里可以获取 detail 中的参数</span></span></span><br><span class="line">&#125;)</span><br><span class="line">el.dispatchEvent(eve)</span><br><span class="line"><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<h2 id="DOM事件模型与事件流"><a href="#DOM事件模型与事件流" class="headerlink" title="DOM事件模型与事件流"></a>DOM事件模型与事件流</h2><p><span class="en-text">DOM</span>事件模型分为<strong>捕获</strong>与<strong>冒泡</strong>：</p>
+<ul>
+<li>捕获事件，由外向里，即外曾元素先执行，直到目标元素；</li>
+<li>冒泡事件，与捕获事件相反，由里向外，即目标元素先执行，再到最外层的元素</li>
+</ul>
+<p><span class="en-text">DOM</span>事件流，也是<span class="en-text">DOM</span>事件传播机制，描述的是<span class="en-text">DOM</span>事件的执行过程，其主要流程为：事件捕获 =&gt; 目标元素 =&gt; 事件冒泡，具体流程为：window =&gt; document =&gt; html标签(即document.documentElement) =&gt; body =&gt; 按层级的标签找到目标 =&gt; 再向外执行冒泡</p>
+<h2 id="事件绑定与移除"><a href="#事件绑定与移除" class="headerlink" title="事件绑定与移除"></a>事件绑定与移除</h2><p>事件的绑定目前主要有两种实现方式，分别是在<span class="en-text">DOM 0</span>级和<span class="en-text">DOM 2</span>级事件种定义的：</p>
+<h3 id="DOM-0级事件绑定与移除"><a href="#DOM-0级事件绑定与移除" class="headerlink" title="DOM 0级事件绑定与移除"></a>DOM 0级事件绑定与移除</h3><p><span class="en-text">DOM 0</span>级事件绑定有两种方式：</p>
+<ul>
+<li>行内事件，直接在标签的属性上赋值；</li>
+<li>元素.on事件名=函数，通过 JS 获取元素后再赋值给事件属性；<br>使用行内事件时，是无法移除事件的，这点需要特别注意。</li>
+</ul>
+<p><span class="en-text">DOM 0</span>级事件的实现原理主要是给元素的事件属性赋值函数，当事件触发时，浏览器会执行绑定的方法。</p>
+<p><span class="en-text">DOM 0</span>级事件移除的方法比较简单，另元素的事件属性为<span class="en-text">null</span>即可，即：元素.on事件名=函数</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!-- 方式一 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">button</span> <span class="attr">type</span>=<span class="string">"button"</span> <span class="attr">onclick</span>=<span class="string">"alert('Hello World')"</span>&gt;</span>行内事件<span class="tag">&lt;/<span class="name">button</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">&lt;!-- 方式二 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">button</span> <span class="attr">type</span>=<span class="string">"button"</span> <span class="attr">id</span>=<span class="string">"btn"</span>&gt;</span>Button<span class="tag">&lt;/<span class="name">button</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="javascript">  <span class="keyword">const</span> btn = <span class="built_in">document</span>.getElementById(<span class="string">'btn'</span>)</span></span><br><span class="line"><span class="actionscript">  btn.onclick = <span class="function"><span class="keyword">function</span><span class="params">()</span> </span>&#123;</span></span><br><span class="line"><span class="actionscript">    <span class="comment">// do something</span></span></span><br><span class="line"><span class="actionscript">    alert(<span class="string">'Hello World'</span>)</span></span><br><span class="line"><span class="actionscript">    btn.onclick = <span class="literal">null</span> <span class="comment">// 移除事件</span></span></span><br><span class="line">  &#125;</span><br><span class="line"><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>使用<span class="en-text">DOM 0</span>级事件的绑定方式缺点在于，只能给事件属性赋值一个函数，多次赋值也以最后一次赋值为准。</p>
+<h3 id="DOM-2级事件绑定与移除"><a href="#DOM-2级事件绑定与移除" class="headerlink" title="DOM 2级事件绑定与移除"></a>DOM 2级事件绑定与移除</h3><p><span class="en-text">DOM 2</span>级新增了<span class="en-text">addEventListener</span>与<span class="en-text">removeEventListener</span>，分别对应事件的绑定与移除；<br><span class="en-text">addEventListener</span> 语法：<br>*. 元素.addEventListener(eventName, handler[,useCapture])<br>*. 元素.addEventListener(eventName, handler[,options])</p>
+<ol>
+<li><span class="en-text">eventName</span> 事件行为，即要注册的事件名；</li>
+<li><span class="en-text">handler</span> 事件行为的处理函数；</li>
+<li><span class="en-text">useCapture</span> 可选参数：true/false; 默认 false，false表示冒泡触发，true 表示捕获触发；</li>
+<li><span class="en-text">option</span> 可选参数对象，含有以下属性：<br>4.1 <span class="en-text">capture</span> 属性与 <span class="en-text">useCapture</span> 的功能一样，<br>4.2 <span class="en-text">once</span>: true/false，表示 handler 处理函数是否值触发一次，<br>4.2 <span class="en-text">passive</span>: true/false，表示 handler 处理函数永远不会调用 preventDefault()，即使调用了也会被忽略，</li>
+</ol>
+<p><span class="en-text">addEventListener</span>的实现原理是将监听事件的处理函数添加到<span class="en-text">EventTarget</span>上的指定事件类型的事件侦听器列表中，</p>
+<p><span class="en-text">removeEventListener</span>语法：</p>
+<ul>
+<li>元素.removeEventListener(eventName, handler[, useCapture])</li>
+<li>元素.removeEventListener(eventName, handler[, options])</li>
+</ul>
+<ol>
+<li><span class="en-text">eventName</span> 事件行为，即要移除的事件名</li>
+<li><span class="en-text">handler</span> 事件行为的处理函数，必须使用注册事件时的处理函数</li>
+<li><span class="en-text">useCapture</span> 可选参数：true/false; 默认 false，false表示冒泡触发，true 表示捕获触发</li>
+<li><span class="en-text">option</span> 可选参数对象，只包含 <span class="en-text">capture</span>属性，其功能与<span class="en-text">useCapture</span>一样</li>
+</ol>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">button</span> <span class="attr">type</span>=<span class="string">"button"</span> <span class="attr">id</span>=<span class="string">"btn"</span>&gt;</span>Button<span class="tag">&lt;/<span class="name">button</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="javascript">  <span class="keyword">const</span> btn = <span class="built_in">document</span>.getElementById(<span class="string">'btn'</span>)</span></span><br><span class="line"></span><br><span class="line"><span class="actionscript">  <span class="function"><span class="keyword">function</span> <span class="title">fn</span> <span class="params">()</span> </span>&#123;</span></span><br><span class="line"><span class="actionscript">    <span class="comment">// do something</span></span></span><br><span class="line"><span class="actionscript">    alert(<span class="string">'Hello World'</span>)</span></span><br><span class="line">  &#125;</span><br><span class="line"><span class="actionscript">  btn.addEventListener(<span class="string">'click'</span>, fn)</span></span><br><span class="line"><span class="actionscript">  btn.removeEventListener(<span class="string">'click'</span>, fn)</span></span><br><span class="line">  /**</span><br><span class="line">  * 或者</span><br><span class="line"><span class="actionscript">  * btn.addEventListener(<span class="string">'click'</span>, fn, &#123;capture: <span class="literal">false</span>, once: <span class="literal">false</span>, passive: <span class="literal">false</span>&#125;)</span></span><br><span class="line"><span class="actionscript">  * btn.removeEventListener(<span class="string">'click'</span>, fn, &#123;capture: <span class="literal">false</span>&#125;)</span></span><br><span class="line">  * */</span><br><span class="line"><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>使用<span class="en-text">addEventListener</span>注册的事件必须通过<span class="en-text">removeEventListener</span>才能移除事件，且传入的参数必须相同才有移除，若使用的是匿名函数，即使匿名函数的内容是一样的，是无法移除事件的；还有一个参数<span class="en-text">useCapture/capture</span>这参数配置也必须相同，否则也无法移除事件：</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">button</span> <span class="attr">type</span>=<span class="string">"button"</span> <span class="attr">id</span>=<span class="string">"btn"</span>&gt;</span>Button<span class="tag">&lt;/<span class="name">button</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="javascript">  <span class="keyword">const</span> btn = <span class="built_in">document</span>.getElementById(<span class="string">'btn'</span>)</span></span><br><span class="line">  </span><br><span class="line"><span class="actionscript">  <span class="comment">// 使用匿名函数时，事件移除失败</span></span></span><br><span class="line"><span class="actionscript">  btn.addEventListener(<span class="string">'click'</span>, <span class="function"><span class="keyword">function</span><span class="params">()</span> </span>&#123;</span></span><br><span class="line"><span class="javascript">    <span class="built_in">console</span>.log(<span class="string">'addEventListener'</span>)</span></span><br><span class="line"><span class="actionscript">    btn.removeEventListener(<span class="string">'click'</span>,<span class="function"><span class="keyword">function</span><span class="params">()</span> </span>&#123;</span></span><br><span class="line"><span class="javascript">      <span class="built_in">console</span>.log(<span class="string">'removeEventListener'</span>)</span></span><br><span class="line">    &#125;)</span><br><span class="line">  &#125;)</span><br><span class="line">  </span><br><span class="line"><span class="actionscript">  <span class="comment">// 当 useCapture/capture 配置不一样时事件也会移除失败</span></span></span><br><span class="line"><span class="actionscript">  <span class="function"><span class="keyword">function</span> <span class="title">cb</span><span class="params">()</span> </span>&#123;</span></span><br><span class="line"><span class="javascript">    <span class="built_in">console</span>.log(<span class="string">'Hello World'</span>)</span></span><br><span class="line"><span class="actionscript">    btn.removeEventListener(<span class="string">'click'</span>, cb, <span class="literal">false</span>)</span></span><br><span class="line">  &#125;</span><br><span class="line"><span class="actionscript">  btn.addEventListener(<span class="string">'click'</span>, cb, <span class="literal">true</span>)</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p><span class="en-text">addEventListener</span>与<span class="en-text">removeEventListener</span>这两个方法是不兼容IE6～8 版本的 IE 浏览器的，需要通过 <span class="en-text">attachEvent</span>与<span class="en-text">detachEvent</span>来实现事件的注册与移除，不过由于微软对 IE 的放弃，所以现在基本不用考虑对 IE 的兼容性。</p>
+<h2 id="事件对象"><a href="#事件对象" class="headerlink" title="事件对象"></a>事件对象</h2><h3 id="定义"><a href="#定义" class="headerlink" title="定义"></a>定义</h3><p>事件对象是指，当事件行为触发时，会产生一个当前操作的相关信息对象，并传递给事件处理函数，也就是常见的<span class="en-text">event</span>对象。<br>事件对象<span class="en-text">event</span>是<span class="en-text">Event</span>类的实例，根据不同的事件类型，会基于<span class="en-text">Event</span>类创建不同事件对象类，而基于不同的事件对象类，从而产生不同的事件对象。如：鼠标事件对象是<span class="en-text">MouseEvent</span>类的实例、键盘事件对象是<span class="en-text">KeyBoardEvent</span>类的实例等等。</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">button</span> <span class="attr">type</span>=<span class="string">"button"</span> <span class="attr">id</span>=<span class="string">"btn"</span>&gt;</span>Button 事件对象<span class="tag">&lt;/<span class="name">button</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="javascript">  <span class="keyword">const</span> btn = <span class="built_in">document</span>.getElementById(<span class="string">'btn'</span>)</span></span><br><span class="line"><span class="actionscript">  <span class="function"><span class="keyword">function</span> <span class="title">handler</span> <span class="params">(event)</span> </span>&#123;</span></span><br><span class="line"><span class="javascript">    <span class="built_in">console</span>.log(event) <span class="comment">// event即为鼠标点击后的事件对象</span></span></span><br><span class="line"><span class="actionscript">    btn.removeEventListener(<span class="string">'click'</span>, handler)</span></span><br><span class="line">  &#125;</span><br><span class="line"><span class="actionscript">  btn.addEventListener(<span class="string">'click'</span>, handler)</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>不过需要注意一点，事件对象只有在事件处理函数运行期间才会存在，一旦事件处理函数运行结束，事件对象就会被销毁。</p>
+<h3 id="常用属性"><a href="#常用属性" class="headerlink" title="常用属性"></a>常用属性</h3><p>事件对象的属性有很多，这里只挑选一些常用的做说明，具体的可查阅 MDN 上<a href="https://developer.mozilla.org/zh-CN/docs/Web/API/Event" target="_blank" rel="noopener">Event文档</a>的说明</p>
+<ul>
+<li><span class="en-text">type</span>: 触发的事件类型，如 click、change等；</li>
+<li><span class="en-text">target</span>: 事件源，即当前操作的目标元素；</li>
+<li><span class="en-text">currentTarget</span>: 当前绑定事件的目标元素；</li>
+<li><span class="en-text">preventDefault()</span>: 用于阻止元素的默认事件；</li>
+<li><span class="en-text">stopPropagation()</span>: 用于阻止冒泡事件</li>
+</ul>
+<h2 id="事件委托"><a href="#事件委托" class="headerlink" title="事件委托"></a>事件委托</h2><h3 id="定义-1"><a href="#定义-1" class="headerlink" title="定义"></a>定义</h3><p>事件委托又称为事件代理，是用一个事件处理程序来管理管理某一类型的所有事件。<br>事件委托的原理是利用事件的冒泡传播机制，将同一类的事件类型绑定给其父元素，并通过事件对象的事件源(<span class="en-text">event.target</span>)处理不同的业务。<br>最常见的例子：</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!-- 给不同的 li 原始绑定事件 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">ul</span> <span class="attr">id</span>=<span class="string">"nameContainer"</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">li</span> <span class="attr">id</span>=<span class="string">"tom"</span>&gt;</span>tom<span class="tag">&lt;/<span class="name">li</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">li</span> <span class="attr">id</span>=<span class="string">"lily"</span>&gt;</span>lily<span class="tag">&lt;/<span class="name">li</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">li</span> <span class="attr">id</span>=<span class="string">"jack"</span>&gt;</span>jack<span class="tag">&lt;/<span class="name">li</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">ul</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="actionscript"><span class="comment">// 原始做法，就是给每个 li 绑定事件</span></span></span><br><span class="line"><span class="javascript"><span class="keyword">const</span> tom = <span class="built_in">document</span>.getElementById(<span class="string">'tom'</span>) </span></span><br><span class="line"><span class="javascript"><span class="keyword">const</span> lily = <span class="built_in">document</span>.getElementById(<span class="string">'lily'</span>) </span></span><br><span class="line"><span class="javascript"><span class="keyword">const</span> jack = <span class="built_in">document</span>.getElementById(<span class="string">'jack'</span>) </span></span><br><span class="line"></span><br><span class="line"><span class="actionscript">tom.addEventListener(<span class="string">'click'</span>, <span class="function"><span class="keyword">function</span><span class="params">(e)</span> </span>&#123;</span></span><br><span class="line"><span class="actionscript">  <span class="comment">// do something</span></span></span><br><span class="line"><span class="javascript">  <span class="built_in">console</span>.log(<span class="string">'I am tom'</span>)</span></span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line"><span class="actionscript">lily.addEventListener(<span class="string">'click'</span>, <span class="function"><span class="keyword">function</span><span class="params">(e)</span> </span>&#123;</span></span><br><span class="line"><span class="actionscript">  <span class="comment">// do something</span></span></span><br><span class="line"><span class="javascript">  <span class="built_in">console</span>.log(<span class="string">'I am lily'</span>)</span></span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line"><span class="actionscript">jack.addEventListener(<span class="string">'click'</span>, <span class="function"><span class="keyword">function</span><span class="params">(e)</span> </span>&#123;</span></span><br><span class="line"><span class="actionscript">  <span class="comment">// do something</span></span></span><br><span class="line"><span class="javascript">  <span class="built_in">console</span>.log(<span class="string">'I am jack'</span>)</span></span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line"><span class="actionscript"><span class="comment">// 使用事件委托</span></span></span><br><span class="line"><span class="javascript"><span class="keyword">const</span> nameContainer = <span class="built_in">document</span>.getElementById(<span class="string">'nameContainer'</span>)</span></span><br><span class="line"><span class="actionscript">nameContainer.addEventListener(<span class="string">'click'</span>, <span class="function"><span class="keyword">function</span><span class="params">(e)</span> </span>&#123;</span></span><br><span class="line"><span class="actionscript">  <span class="comment">// 通过事件源 e.target 做不同的业务</span></span></span><br><span class="line"><span class="actionscript">  <span class="keyword">switch</span> (e.target.id) &#123;</span></span><br><span class="line"><span class="actionscript">    <span class="keyword">case</span> <span class="string">'tom'</span>: </span></span><br><span class="line"><span class="javascript">      <span class="built_in">console</span>.log(<span class="string">'I am tom'</span>)</span></span><br><span class="line"><span class="actionscript">    <span class="keyword">case</span> <span class="string">'lily'</span>:</span></span><br><span class="line"><span class="javascript">      <span class="built_in">console</span>.log(<span class="string">'I am lily'</span>)</span></span><br><span class="line"><span class="actionscript">    <span class="keyword">case</span> <span class="string">'jack'</span>:</span></span><br><span class="line"><span class="javascript">      <span class="built_in">console</span>.log(<span class="string">'I am jack'</span>)</span></span><br><span class="line"><span class="actionscript">    <span class="keyword">default</span>: </span></span><br><span class="line"><span class="actionscript">      <span class="comment">// do something</span></span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;)</span><br><span class="line"><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>从以上的代码可看出，使用事件委托之后，代码量更少，且业务更集中，对于代码的维护是比较友好的，而且绑定的事件更少，减少了内存消耗，也就优化了性能。<br>因为事件是基于冒泡机制，所以不适用于没有冒泡的事件行为，如 <span class="en-text">blur、focus、mouseenter、mouseleave</span>等事件</p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p>(MDN Event)[<a href="https://developer.mozilla.org/zh-CN/docs/Web/API/Event]" target="_blank" rel="noopener">https://developer.mozilla.org/zh-CN/docs/Web/API/Event]</a><br>(W3C标准)[<a href="https://www.chinaw3c.org/standards.html]" target="_blank" rel="noopener">https://www.chinaw3c.org/standards.html]</a><br>(事件及事件绑定 &amp;&amp; 事件对象及事件传播——基础知识（脑图梳理）)[<a href="https://juejin.im/post/6844904144587718664]" target="_blank" rel="noopener">https://juejin.im/post/6844904144587718664]</a><br>《JavaScript高级程序设计》</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2020/07/19/JavaScript/JavaScript%E6%A8%A1%E5%9D%97%E5%8C%96/" rel="prev" title="JavaScript模块化">
+      <i class="fa fa-chevron-left"></i> JavaScript模块化
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+    <div class="comments" id="valine-comments"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let activeClass = CONFIG.comments.activeClass;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#导读"><span class="nav-number">1.</span> <span class="nav-text">导读</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#事件"><span class="nav-number">2.</span> <span class="nav-text">事件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#事件级别"><span class="nav-number">3.</span> <span class="nav-text">事件级别</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#DOM-0级"><span class="nav-number">3.1.</span> <span class="nav-text">DOM 0级</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#DOM-1级"><span class="nav-number">3.2.</span> <span class="nav-text">DOM 1级</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#DOM-2级"><span class="nav-number">3.3.</span> <span class="nav-text">DOM 2级</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#DOM-3级"><span class="nav-number">3.4.</span> <span class="nav-text">DOM 3级</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#DOM事件模型与事件流"><span class="nav-number">4.</span> <span class="nav-text">DOM事件模型与事件流</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#事件绑定与移除"><span class="nav-number">5.</span> <span class="nav-text">事件绑定与移除</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#DOM-0级事件绑定与移除"><span class="nav-number">5.1.</span> <span class="nav-text">DOM 0级事件绑定与移除</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#DOM-2级事件绑定与移除"><span class="nav-number">5.2.</span> <span class="nav-text">DOM 2级事件绑定与移除</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#事件对象"><span class="nav-number">6.</span> <span class="nav-text">事件对象</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#定义"><span class="nav-number">6.1.</span> <span class="nav-text">定义</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#常用属性"><span class="nav-number">6.2.</span> <span class="nav-text">常用属性</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#事件委托"><span class="nav-number">7.</span> <span class="nav-text">事件委托</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#定义-1"><span class="nav-number">7.1.</span> <span class="nav-text">定义</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考"><span class="nav-number">8.</span> <span class="nav-text">参考</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="zed"
+      src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">zed</p>
+  <div class="site-description" itemprop="description">欲望提升热忱，毅力磨平高山</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">15</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/CBCzed" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;CBCzed" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">zed</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v4.2.0
+  </div>
+  <span class="post-meta-divider">|</span>
+  <div class="theme-info">主题 – <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> v7.7.0
+  </div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+
+<script>
+NexT.utils.loadComments(document.querySelector('#valine-comments'), () => {
+  NexT.utils.getScript('https://cdnjs.cloudflare.com/ajax/libs/valine/1.3.10/Valine.min.js', () => {
+    var GUEST = ['nick', 'mail', 'link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item => {
+      return GUEST.includes(item);
+    });
+    new Valine({
+      el: '#valine-comments',
+      verify: false,
+      notify: false,
+      appId: 'zD49AovTAtNDF87e6yNmeUp4-gzGzoHsz',
+      appKey: 'IxyYcjJQjBSgU9zQgI21lGFC',
+      placeholder: "请留下您宝贵的意见",
+      avatar: 'mm',
+      meta: guest,
+      pageSize: '10' || 10,
+      visitor: true,
+      lang: 'zh-cn' || 'zh-cn',
+      path: location.pathname,
+      recordIP: false,
+      serverURLs: ''
+    });
+  }, window.Valine);
+});
+</script>
+
+</body>
+</html>
